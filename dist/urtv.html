@@ -1293,7 +1293,7 @@ function dhikrNow(){
   const saw = s => esc(s).replace(/ﷺ/g, '<span class="saw">ﷺ</span>');
   return {title: d.cat, rows: [
     `<li class="quote dhikr${d.text.length > 120 ? ' long' : ''}"><span class="dk-orn">۞</span>${saw(d.text)}</li>`,
-    `<li class="src dk-src">${d.count ? `<span class="dk-count">${esc(d.count)}</span>` : ''}<span>${esc(ar(d.src))}</span></li>`]};
+    `<li class="src dk-src">${d.count ? `<span class="dk-count">${esc(d.count)}</span>` : ''}<span>${esc(ar(d.src.replace(' · ', d.src.startsWith('سورة') ? '، آية ' : '، رقم ')))}</span></li>`]};   // «·» next to «٠» reads as a digit
 }
 
 const WX_CODES = {
