@@ -71,7 +71,7 @@ for abi in [a for a in sys.argv[2].split(",") if a] + ["universal", ""]:
 }
 
 if [ "$what" = extras ]; then
-  from_github truefedex/tv-bro com.phlox.tvwebbrowser 'tvbro-[0-9.]+-generic-geckoExcluded\.apk'   # light: the TV's WebView
+  [ "${SKIP_TVBRO:-}" = 1 ] || from_github truefedex/tv-bro com.phlox.tvwebbrowser 'tvbro-[0-9.]+-generic-geckoExcluded\.apk'   # light: the TV's WebView
   from_github yuliskov/SmartTube org.smarttube.stable 'SmartTube_stable_[0-9.]+_{abi}\.apk'
   [ "$failed" = 0 ] || exit 1
 fi
