@@ -130,6 +130,13 @@
   .week li.quote.hadith{font-size:clamp(15px,1.3vw,25px);line-height:1.7}
   .week li.quote .nar{font-size:.66em;color:#B9AE96}
   .week li.quote .nar .saw{font-size:1.45em}
+  /* adhkar: centred, larger, a gold mark, the count as a small pill */
+  .week li.quote.dhikr{text-align:center;font-size:clamp(20px,1.85vw,36px);line-height:1.8;padding-top:.8vh;color:#FFF7E6}
+  .week li.quote.dhikr.long{font-size:clamp(16px,1.4vw,27px);line-height:1.75}
+  .week li.quote.dhikr .saw{font-size:1.3em}
+  .dk-orn{display:block;font-family:'NotoMarks','Noto Naskh Arabic',serif;color:#D6AF6B;font-size:.9em;line-height:1;margin-bottom:.5vh;opacity:.85}
+  .week li.dk-src{display:flex;justify-content:center;align-items:center;gap:.8em;text-align:center}
+  .dk-count{border:1px solid rgba(220,184,111,.55);border-radius:99px;padding:.1em .8em;color:#F1CF8A}
   .week li.src{border-bottom:none;padding:.6vh 0 0;font-size:clamp(12px,.95vw,18px);color:#D6AF6B}
   .week .empty{color:#9A9078;font-size:clamp(14px,1.1vw,21px);font-weight:300;margin-top:1vh}
 
@@ -387,7 +394,7 @@ const CONFIG = {
     .map(x=>(x||'').trim()).filter(x=>/^\d+$/.test(x)).slice(0, 10),
   sportsKey: '123',
   // the card beside the clock: shows | prayers | forecast | matches | verse | none (#week=0 from older builds = none)
-  panel: (p => ['shows','prayers','forecast','matches','verse','none'].includes(p) ? p : 'verse')
+  panel: (p => ['shows','prayers','forecast','matches','verse','adhkar','none'].includes(p) ? p : 'verse')
          (_Q.get('panel') || (_Q.get('week') === '0' ? 'none' : 'verse')),
   matchesPerPage: 1,   // one at a time: room for both badges and full names
   matchPageMs: 15000,
@@ -1167,6 +1174,7 @@ function renderPanel(animate){
   else if(P === 'forecast') rows = forecastRows();
   else if(P === 'matches') rows = matchRows();
   else if(P === 'verse'){ const q = quoteOfDay(); hd.textContent = q.title; rows = q.rows; }
+  else if(P === 'adhkar'){ const q = dhikrNow(); hd.textContent = q.title; rows = q.rows; }
   if(PANEL_TITLE[P]) hd.textContent = PANEL_TITLE[P];
   if(!rows.length){
     ul.classList.remove('flip');
@@ -1248,6 +1256,32 @@ function quoteOfDay(){
   const saw = s => s.replace(/ﷺ/g, '<span class="saw">ﷺ</span>').replace(/[﴿﴾]/g, m => `<span class="orn">${m}</span>`);
   const body = h.parts.map(([k, t]) => k === 'q' ? `«${saw(esc(t))}»` : `<span class="nar">${saw(esc(t))}</span>`).join(' ');
   return {title:'حديث اليوم', rows:[`<li class="quote hadith">${body}</li>`, `<li class="src">${esc(h.source)}</li>`]};
+}
+
+// adhkar: a new one every 5 minutes, the morning ones from Fajr to Dhuhr, the evening ones from Asr to Isha.
+// Every text is from a hadith or a verse, its source shown under it (assets/shared/adhkar.json).
+const ADHKAR = __ADHKAR__;
+const DHIKR_MIN = 5;
+function dhikrWhen(){
+  let t = DAY_TIMES;
+  if(!t){ try{ t = computePrayers(); }catch(e){ return ''; } }
+  const p = riyadhParts(), now = p.h * 60 + p.mi;
+  const m = k => { const [h, mi] = String(t[k]).split(':').map(Number); return h * 60 + mi; };
+  if(now >= m('Fajr') && now < m('Dhuhr')) return 'morning';
+  if(now >= m('Asr') && now < m('Isha')) return 'evening';
+  return '';
+}
+function dhikrNow(){
+  const when = dhikrWhen(), p = riyadhParts();
+  const pool = ADHKAR.filter(d => !d.when || d.when === when);
+  // the time's own adhkar first in the order, then the rest, the same order all day
+  const own = seededOrder(pool.filter(d => d.when), riyadhDayNumber()), rest = seededOrder(pool.filter(d => !d.when), riyadhDayNumber());
+  const list = own.length ? own.flatMap((d, i) => [d, rest[i % rest.length]]).concat(rest.slice(own.length)) : rest;
+  const d = list[Math.floor((p.h * 60 + p.mi) / DHIKR_MIN) % list.length];
+  const saw = s => esc(s).replace(/ﷺ/g, '<span class="saw">ﷺ</span>');
+  return {title: d.cat, rows: [
+    `<li class="quote dhikr${d.text.length > 120 ? ' long' : ''}"><span class="dk-orn">۞</span>${saw(d.text)}</li>`,
+    `<li class="src dk-src">${d.count ? `<span class="dk-count">${esc(d.count)}</span>` : ''}<span>${esc(ar(d.src))}</span></li>`]};
 }
 
 const WX_CODES = {
@@ -1554,11 +1588,21 @@ function boot(){
   }, 25*1000);
   setInterval(applyNight, 60*1000);
   setInterval(pixelShift, 4*60*1000);
+  if(CONFIG.panel === 'adhkar') turnDhikr();
   let lastDay = new Intl.DateTimeFormat('en-CA',{timeZone:CONFIG.timezone}).format(new Date());
   setInterval(()=>{
     const d = new Intl.DateTimeFormat('en-CA',{timeZone:CONFIG.timezone}).format(new Date());
     if(d !== lastDay){ lastDay = d; loadPhotoIndex().then(() => applyBackground(true)); tickDates(); tickRamadan(); loadPrayers(); loadMatches(); if(CONFIG.panel === 'shows') loadWeek(); loadWeather(); renderPanel(false); }
   }, 60*1000);
+}
+
+// a new dhikr on every 5-minute mark, faded in like the other cards
+function turnDhikr(){
+  let slot = -1;
+  setInterval(() => {
+    const p = riyadhParts(), s = Math.floor((p.h * 60 + p.mi) / DHIKR_MIN);
+    if(s !== slot){ const first = slot < 0; slot = s; if(!first) renderPanel(true); }
+  }, 20 * 1000);
 }
 
 // The launcher's card: the chosen panel only, refreshed like on the screensaver, nothing else loaded.
@@ -1578,6 +1622,7 @@ function bootWidget(){
     if(P === 'shows' && WEEK_POOL.length > WEEK_ROWS){ WEEK_PAGE++; renderWeekPage(true); }
     if(P === 'matches'){ LIST_PAGE++; renderPanel(matchRows().length > WEEK_ROWS); }
   }, 25*1000);
+  if(P === 'adhkar') turnDhikr();
   let lastDay = riyadhDayNumber();
   setInterval(() => { if(riyadhDayNumber() !== lastDay){ lastDay = riyadhDayNumber(); if(P === 'prayers') loadPrayers(); renderPanel(false); } }, 60*1000);
   reveal();

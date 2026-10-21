@@ -139,6 +139,44 @@ for (const [hash, want] of [['', 30], ['photos=5', 5], ['photos=60', 60], ['phot
   await ctx.close();
 }
 
+// ---- adhkar: every one fits the card, morning ones in the morning, a new one every 5 minutes
+for (const [width, height] of [[1920, 1080], [1280, 720], [960, 540]]) {
+  const { p, ctx, errors } = await open('tv.html', 'panel=adhkar', { width, height });
+  const r = await p.evaluate(() => {
+    const card = document.querySelector('.week'), bad = [];
+    const top = document.querySelector('.top').getBoundingClientRect(), clock = document.querySelector('.clockwrap').getBoundingClientRect();
+    const bar = document.querySelector('.bottom').getBoundingClientRect();
+    let tallest = 0;
+    for (const d of ADHKAR) {
+      const ul = document.getElementById('week-list');
+      document.getElementById('week-hd').textContent = d.cat;
+      ul.innerHTML = `<li class="quote dhikr${d.text.length > 120 ? ' long' : ''}"><span class="dk-orn">۞</span>${d.text}</li><li class="src dk-src">${d.count ? `<span class="dk-count">${d.count}</span>` : ''}<span>${d.src}</span></li>`;
+      const c = card.getBoundingClientRect();
+      tallest = Math.max(tallest, c.height);
+      if (c.top < top.bottom || c.bottom > bar.top - 4 || c.right > clock.left - 4 || c.height > 0.42 * innerHeight) bad.push(d.text.slice(0, 30));
+    }
+    return { n: ADHKAR.length, bad, tallest: Math.round(tallest) };
+  });
+  check(`every dhikr fits the card at ${width}x${height} (${r.n}, tallest ${r.tallest}px)`, !errors.length && !r.bad.length, r.bad.join(' | ') + errors.join('; '));
+  await ctx.close();
+}
+{
+  const { p, ctx, errors } = await open('tv.html', 'panel=adhkar');
+  const r = await p.evaluate(() => {
+    const out = {}, real = riyadhParts;
+    const at = (h, mi) => { window.riyadhParts = () => Object.assign(real(), { h, mi }); const q = dhikrNow(); return q.title + '|' + q.rows[0]; };
+    out.morning = at(5 + 2, 0); out.evening = at(17, 0);
+    out.a = at(13, 0); out.b = at(13, 4); out.c = at(13, 5);
+    const srcs = ADHKAR.every(d => d.src && d.text && d.cat);
+    return { morning: out.morning.startsWith('أذكار الصباح') || !out.morning.startsWith('أذكار المساء'),
+             evening: !out.evening.startsWith('أذكار الصباح'), same: out.a === out.b, turned: out.b !== out.c, srcs,
+             hd: document.getElementById('week-hd').textContent, rows: document.querySelectorAll('#week-list li').length };
+  });
+  check('adhkar: shown with its source, never the morning ones in the evening, a new one on the 5-minute mark',
+    !errors.length && r.morning && r.evening && r.same && r.turned && r.srcs && r.rows === 2, JSON.stringify(r) + errors.join('; '));
+  await ctx.close();
+}
+
 // ---- old settings links and «لا شيء»
 for (const [hash, panel, shown] of [['', 'verse', true], ['week=0', 'none', false], ['week=1', 'verse', true],
                                      ['panel=none', 'none', false], ['panel=bogus', 'verse', true]]) {
