@@ -90,7 +90,7 @@ screen: [docs/RECREATE-PROMPT.md](docs/RECREATE-PROMPT.md).
 
 | | | |
 |---|---|---|
-| **شاشة تلفزيونك** · screensaver | Clock, Hijri date, prayer times and iqama, Ramadan, your teams' matches, weather, markets, and beside the clock your choice of new episodes, today's prayers, the 5-day forecast, all your teams' games, or a verse/hadith of the day, over Saudi landscapes | `urtv-screensaver.apk` |
+| **شاشة تلفزيونك** · screensaver | Clock, Hijri date, prayer times and iqama, the next occasion (Ramadan, the Eids, Arafah, National Day, Founding Day), your teams' matches with their badges (on match day the card beside the clock becomes the match), weather, markets, and beside the clock your choice of new episodes, today's prayers, the 5-day forecast, all your teams' games, or a verse/hadith of the day, over photos of every region of Saudi Arabia: one region a day, your own on Fridays, the photo matched to the time of day and named on screen | `urtv-screensaver.apk` |
 | **تلفزيونك** · home screen | Clean Arabic launcher: favourites row (5–10 apps) arranged in «ترتيب المفضلة», all apps, inputs, Wi-Fi, settings; optional card from the screensaver (off by default) | `urtv-home.apk` |
 | **Two free apps** | [TV Bro](https://github.com/truefedex/tv-bro), a web browser for the TV, and [SmartTube](https://github.com/yuliskov/SmartTube), YouTube without ads, from their own releases (skip with `SKIP_EXTRAS=1`) | `optimize/install.sh extras` |
 | **Speed-up** | Telemetry, ads and demos off (reversibly), closed apps frozen, Play Store kept from running in the background, faster animations | `optimize/` |
@@ -129,7 +129,7 @@ dist/tv.html          light page the Android app loads (0.3 MB); the app serves 
 android/app           the screensaver app (sa.urtv.screensaver): DreamService, settings, auto-update
 android/launcher      the home screen (sa.urtv.home)
 assets/               fonts, bundled photos, Arabic team names, verse and hadith texts
-photos/               the hosted photo set (5 shown per 4 days, rotating every 30 min)
+photos/               the hosted photo set, tagged by region and time of day (index.json); one region a day, every 30 min
 optimize/             TV tools (Python ADB client, no adb binary needed); lists/ says what may be turned off
 docs/                 the agent prompts (setup, recreate), what we learned on real TVs, test plan, photo credits
 .github/              CI: APK builds, checks, data tools (verses, hadith, clubs, photos), README images
@@ -163,7 +163,7 @@ Arabic text of the six Sunni books, and only those found are shown, with the boo
 
 ## Credits
 
-Photos: Unsplash photographers, listed in [docs/PHOTO-CREDITS.md](docs/PHOTO-CREDITS.md). Fonts: Thmanyah, and
+Photos: Unsplash photographers and Wikimedia Commons authors, listed in [docs/PHOTO-CREDITS.md](docs/PHOTO-CREDITS.md). Fonts: Thmanyah, and
 Noto Naskh Arabic for ﷺ ﴿﴾ (OFL, `assets/fonts/`).
 Home screen adapted from [mihirgupta0900/tv-home](https://github.com/mihirgupta0900/tv-home) (MIT,
 `android/launcher/LICENSE-tv-home`). Package ratings from [UAD-ng](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation).

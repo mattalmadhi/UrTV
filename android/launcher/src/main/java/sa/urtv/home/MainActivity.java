@@ -806,7 +806,7 @@ public class MainActivity extends Activity {
 
     // Hosted photos (photos/index.json in the repo) join the bundled ones. Each is downloaded once into
     // files/photos and reused; offline or on any failure the next bundled photo is shown instead.
-    static final String PHOTO_BASE = "https://raw.githubusercontent.com/tshi-dev/UrTV/master/photos/";
+    static final String PHOTO_BASE = "https://raw.githubusercontent.com/" + BuildConfig.REPO + "/" + BuildConfig.BRANCH + "/photos/";
     static final long INDEX_MAX_AGE_MS = 24 * 3600 * 1000L;
 
     static final int PHOTO_SET = 5, PHOTO_PERIOD_DAYS = 4;
@@ -841,7 +841,8 @@ public class MainActivity extends Activity {
 
     /** Off the main thread: refresh the hosted photo list once a day. */
     private void refreshPhotoIndex() {
-        if (System.currentTimeMillis() - prefs().getLong("photoIndexAt", 0) < INDEX_MAX_AGE_MS) return;
+        if (System.currentTimeMillis() - prefs().getLong("photoIndexAt", 0) < INDEX_MAX_AGE_MS
+                && prefs().contains("photoIndexJson")) return;
         try {
             org.json.JSONArray a = new org.json.JSONArray(new String(download(PHOTO_BASE + "index.json"), "UTF-8"));
             List<String> names = new ArrayList<>();
@@ -851,6 +852,7 @@ public class MainActivity extends Activity {
             }
             if (!names.isEmpty()) prefs().edit()
                     .putString("photoIndex", android.text.TextUtils.join(",", names))
+                    .putString("photoIndexJson", a.toString())   // with each photo's region and time of day
                     .putLong("photoIndexAt", System.currentTimeMillis()).apply();
         } catch (Exception ignored) { }
     }
@@ -876,6 +878,56 @@ public class MainActivity extends Activity {
         return BitmapFactory.decodeStream(in, null, o);
     }
 
+    private String lastRegional = "";
+
+    /**
+     * Today's region at this time of day (Photos), the same choice as the screensaver; a photo bundled in the APK is
+     * read from it, any other is downloaded once into files/photos. Null when the index has no regions yet.
+     */
+    private Bitmap regionalWallpaper() {
+        List<Photos.Photo> all = Photos.parse(prefs().getString("photoIndexJson", "[]"));
+        if (all.isEmpty()) return null;
+        double lat = 24.6877, lon = 46.7219;
+        String region = "";
+        try (android.database.Cursor c = getContentResolver().query(
+                android.net.Uri.parse("content://sa.urtv.screensaver.config"), null, null, null, null)) {
+            if (c != null && c.moveToFirst()) {
+                android.net.Uri u = android.net.Uri.parse("x://config/?" + c.getString(0));
+                lat = Double.parseDouble(u.getQueryParameter("lat"));
+                lon = Double.parseDouble(u.getQueryParameter("lon"));
+                region = u.getQueryParameter("region") == null ? "" : u.getQueryParameter("region");
+            }
+        } catch (RuntimeException ignored) { }   // screensaver app missing or too old: Riyadh
+        String today = Photos.regionOfDay(Photos.homeRegion(region, lat, lon));
+        List<Photos.Photo> order = Photos.order(Photos.pool(all, today, Photos.timeOfDay(lat, lon)), Photos.riyadhDay());
+        if (order.isEmpty()) return null;
+        Photos.Photo p = order.get(Math.floorMod(wallIndex, order.size()));
+        if (order.size() > 1 && p.f.equals(lastRegional)) p = order.get(Math.floorMod(wallIndex + 1, order.size()));
+        lastRegional = p.f;
+        List<String> keep = new ArrayList<>();
+        for (Photos.Photo x : order) keep.add(x.f);
+        pruneCachedPhotos(keep.toArray(new String[0]));
+        if (Arrays.asList(wallpapers).contains(p.f)) {
+            try (java.io.InputStream in = getAssets().open("wallpapers/" + p.f)) { return decode(in); }
+            catch (java.io.IOException ignored) { }
+        }
+        java.io.File f = new java.io.File(getFilesDir(), "photos/" + p.f);
+        try {
+            if (!f.isFile()) {
+                byte[] data = download(PHOTO_BASE + f.getName());
+                java.io.File dir = f.getParentFile();
+                if (dir.isDirectory() || dir.mkdirs()) {
+                    java.io.File tmp = new java.io.File(dir, f.getName() + ".tmp");
+                    try (java.io.FileOutputStream out = new java.io.FileOutputStream(tmp)) { out.write(data); }
+                    if (!tmp.renameTo(f)) tmp.delete();
+                }
+            }
+            try (java.io.InputStream in = new java.io.FileInputStream(f)) { return decode(in); }
+        } catch (java.io.IOException e) {
+            return null;   // offline: the bundled rotation below
+        }
+    }
+
     /** Decode the next photo off the main thread, then crossfade it in over the current one. */
     private void nextWallpaper() {
         handler.removeCallbacks(rotateWallpaper);
@@ -890,8 +942,13 @@ public class MainActivity extends Activity {
         final String fallback = "wallpapers/" + wallpapers[idx % wallpapers.length];
         new Thread(() -> {
             refreshPhotoIndex();
+            Bitmap bm = regionalWallpaper();
+            if (bm != null) {
+                Bitmap result = bm;
+                runOnUiThread(() -> showWallpaper(result));
+                return;
+            }
             pruneCachedPhotos(remotePhotos());
-            Bitmap bm = null;
             if (idx >= wallpapers.length) {
                 java.io.File f = new java.io.File(getFilesDir(), "photos/" + remote[idx - wallpapers.length]);
                 try {

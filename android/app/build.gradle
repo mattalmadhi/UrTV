@@ -16,6 +16,7 @@ android {
         versionName "3.${System.getenv('GITHUB_RUN_NUMBER') ?: '0'}"
         // the branch the page, fonts and photos are fetched from: CI passes the one it builds, a local build follows master
         buildConfigField "String", "BRANCH", "\"${System.getenv('URTV_BRANCH') ?: 'master'}\""
+        buildConfigField "String", "REPO", "\"${System.getenv('URTV_REPO') ?: 'tshi-dev/UrTV'}\""   // a fork's owner/name
     }
 
     buildFeatures {

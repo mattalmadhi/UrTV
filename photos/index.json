@@ -2,431 +2,1528 @@
  {
   "f": "wTmGtmGQCjQ.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "golden",
+  "l": 0.3,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "NPDnHmYsl6Y.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.72
+  "d": 0.72,
+  "t": "day",
+  "l": 0.82,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "9hWJs7iblh8.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.9
+  "d": 0.9,
+  "t": "golden",
+  "l": 0.51,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "-RlktmDy3Ec.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.95
+  "d": 0.95,
+  "t": "golden",
+  "l": 0.43,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "Iy59i0M7oP4.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.77
+  "d": 0.77,
+  "t": "golden",
+  "l": 0.7,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "yx7TJle8LhM.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "day",
+  "l": 0.25,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "xXqWVUvf_Gw.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "golden",
+  "l": 0.37,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "WpOMM4uE-F8.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.75
+  "d": 0.75,
+  "t": "golden",
+  "l": 0.75,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "207NEuFvjlg.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.72
+  "d": 0.72,
+  "t": "day",
+  "l": 0.79,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "2gVgVf5CNAE.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.93
+  "d": 0.93,
+  "t": "golden",
+  "l": 0.47,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "XDtzu1D2P8c.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.84
+  "d": 0.84,
+  "t": "golden",
+  "l": 0.59,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "THlO6Mkf5uI.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.74
+  "d": 0.74,
+  "t": "day",
+  "l": 0.75,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "gOqBe7ropxM.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.78
+  "d": 0.78,
+  "t": "golden",
+  "l": 0.7,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "nrhz95KUhrI.jpg",
   "c": "Tomasz Zuczek · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "day",
+  "l": 0.31,
+  "r": "makkah",
+  "p": "سماء جدة"
  },
  {
   "f": "9633dHhioC8.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.96
+  "d": 0.96,
+  "t": "golden",
+  "l": 0.41,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "rVC6O_gDE0Q.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.13,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "t3dlLOhdEzs.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.99
+  "d": 0.99,
+  "t": "day",
+  "l": 0.35,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "ckfXPMb2_BI.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.24,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "AC3T7tvwPrY.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.72
+  "d": 0.72,
+  "t": "golden",
+  "l": 0.81,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "_jfejQo2tZw.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.97
+  "d": 0.97,
+  "t": "golden",
+  "l": 0.38,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "f5ZB0LHwi0s.jpg",
   "c": "Hala AlGhanim · Unsplash",
-  "d": 0.88
+  "d": 0.88,
+  "t": "golden",
+  "l": 0.54,
+  "r": "riyadh",
+  "p": "برج المملكة، الرياض"
  },
  {
   "f": "fYTVHcpak2g.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.72
+  "d": 0.72,
+  "t": "golden",
+  "l": 0.79,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "85ey1vFIwkc.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.93
+  "d": 0.93,
+  "t": "day",
+  "l": 0.46,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "s3leOixsIX0.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.74
+  "d": 0.74,
+  "t": "golden",
+  "l": 0.74,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "s6g6ZSxM3kQ.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.78
+  "d": 0.78,
+  "t": "day",
+  "l": 0.68,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "uqAUg1zvMXQ.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.15,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "SGZ5DkDOoRo.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.93
+  "d": 0.93,
+  "t": "golden",
+  "l": 0.44,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "0rvKw0fDiHk.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.1,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "r4ZSR0cKJw8.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.85
+  "d": 0.85,
+  "t": "golden",
+  "l": 0.56,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "yUcH008GS6A.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.15,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "7EkyXZYeYsw.jpg",
   "c": "Damir Babacic · Unsplash",
-  "d": 0.79
+  "d": 0.79,
+  "t": "golden",
+  "l": 0.68
  },
  {
   "f": "4q87Z96NBYg.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.9
+  "d": 0.9,
+  "t": "golden",
+  "l": 0.5,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "39n8YVSn0d4.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.87
+  "d": 0.87,
+  "t": "golden",
+  "l": 0.55,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "g9wCI64k2yw.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.86
+  "d": 0.86,
+  "t": "day",
+  "l": 0.56,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "G8_JBLFMWTg.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.79
+  "d": 0.79,
+  "t": "day",
+  "l": 0.69,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "kzEFwhXPXwo.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "day",
+  "l": 0.15,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "0SUho_B0nus.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.72
+  "d": 0.72,
+  "t": "golden",
+  "l": 0.93,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "xAPIN3qwZN0.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.87
+  "d": 0.87,
+  "t": "golden",
+  "l": 0.56,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "SUIMrEKVOXc.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.19,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "anozjF6uqI0.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.73
+  "d": 0.73,
+  "t": "golden",
+  "l": 0.77,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "LAj90eAXOZA.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.96
+  "d": 0.96,
+  "t": "day",
+  "l": 0.42,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "ud9NlvvEzUI.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.91
+  "d": 0.91,
+  "t": "golden",
+  "l": 0.51,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "dMSYsXdwl9M.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.9
+  "d": 0.9,
+  "t": "golden",
+  "l": 0.5,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "seX13AzLqls.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.17,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "x4vxK4VGKX0.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.97
+  "d": 0.97,
+  "t": "golden",
+  "l": 0.38,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "7vOpzRF33Zo.jpg",
   "c": "Rabah Al Shammary · Unsplash",
-  "d": 0.73
+  "d": 0.73,
+  "t": "day",
+  "l": 0.77
  },
  {
   "f": "D1RR-UEnsjw.jpg",
   "c": "BASHAER 🌟 · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.05,
+  "r": "makkah",
+  "p": "جدة"
  },
  {
   "f": "HbixalFpY1w.jpg",
   "c": "RAKAN ALREQABI · Unsplash",
-  "d": 0.73
+  "d": 0.73,
+  "t": "day",
+  "l": 0.77
  },
  {
   "f": "iQR2jzuw9m8.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.92
+  "d": 0.92,
+  "t": "golden",
+  "l": 0.48,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "ihIKOg_lHgI.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.34,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "9f7oiGARGIg.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.85
+  "d": 0.85,
+  "t": "day",
+  "l": 0.6,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "bRRy9ucK1rY.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.82
+  "d": 0.82,
+  "t": "day",
+  "l": 0.64,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "epQdtCvBrc4.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.93
+  "d": 0.93,
+  "t": "golden",
+  "l": 0.46,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "IU-gFwAyazs.jpg",
   "c": "imran sm · Unsplash",
-  "d": 0.77
+  "d": 0.77,
+  "t": "day",
+  "l": 0.7
  },
  {
   "f": "tUqMoFE_eAE.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.9
+  "d": 0.9,
+  "t": "golden",
+  "l": 0.5,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "fNXY1xjZQYI.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.86
+  "d": 0.86,
+  "t": "day",
+  "l": 0.57,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "3DPaL6XDcZE.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.72
+  "d": 0.72,
+  "t": "day",
+  "l": 0.8,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "va9218QJFAk.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "golden",
+  "l": 0.24,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "MV7iHCilMJc.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.76
+  "d": 0.76,
+  "t": "golden",
+  "l": 0.71,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "Xm1wdkNUwrY.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.76
+  "d": 0.76,
+  "t": "golden",
+  "l": 0.72,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "qGH25zv5xMk.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.82
+  "d": 0.82,
+  "t": "day",
+  "l": 0.64,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "ljEXet84nL8.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.87
+  "d": 0.87,
+  "t": "day",
+  "l": 0.54,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "AGZgrNeq7Kg.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.76
+  "d": 0.76,
+  "t": "day",
+  "l": 0.73,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "e5UUZcgQ5IU.jpg",
   "c": "Kemo Sahab · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "night",
+  "l": 0.15
  },
  {
   "f": "ARpmY5qq7Lk.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.8
+  "d": 0.8,
+  "t": "day",
+  "l": 0.67,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "dfglhJbc4Uc.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.85
+  "d": 0.85,
+  "t": "day",
+  "l": 0.58,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "lrhF4w-KKjA.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.97
+  "d": 0.97,
+  "t": "day",
+  "l": 0.4,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "Iogsh4Cbdjs.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.93
+  "d": 0.93,
+  "t": "golden",
+  "l": 0.46,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "wSJmlKMecHU.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.87
+  "d": 0.87,
+  "t": "day",
+  "l": 0.56,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "01u4zLK54tE.jpg",
   "c": "Kemo Sahab · Unsplash",
-  "d": 0.97
+  "d": 0.97,
+  "t": "golden",
+  "l": 0.39,
+  "r": "baha",
+  "p": "الباحة"
  },
  {
   "f": "_5TOw0ED9Jk.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "day",
+  "l": 0.2,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "RqfFauPXJx0.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.86
+  "d": 0.86,
+  "t": "day",
+  "l": 0.57,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "wMHauMZiQjg.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.96
+  "d": 0.96,
+  "t": "day",
+  "l": 0.41,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "qqwX49ov8UY.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.88
+  "d": 0.88,
+  "t": "day",
+  "l": 0.54,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "pyThxd4x8Tk.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.79
+  "d": 0.79,
+  "t": "day",
+  "l": 0.67,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "_TFgiFZyH6M.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.99
+  "d": 0.99,
+  "t": "golden",
+  "l": 0.36,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "QOGeYSi11-w.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.9
+  "d": 0.9,
+  "t": "day",
+  "l": 0.51,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "UuzkCF-jmPY.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.86
+  "d": 0.86,
+  "t": "day",
+  "l": 0.57,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "0rCJ-y3wx6g.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.87
+  "d": 0.87,
+  "t": "day",
+  "l": 0.52,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "9Jgo0Ix_TRw.jpg",
   "c": "NEOM · Unsplash",
-  "d": 1.0
+  "d": 1.0,
+  "t": "day",
+  "l": 0.15,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "eOWabmCNEdg.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.76
+  "d": 0.76,
+  "t": "day",
+  "l": 0.73,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "oem64GHBGH8.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.98
+  "d": 0.98,
+  "t": "golden",
+  "l": 0.39,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "w-yuRFSkbVw.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.95
+  "d": 0.95,
+  "t": "golden",
+  "l": 0.43,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "efzvMAIpfWY.jpg",
   "c": "NEOM · Unsplash",
-  "d": 0.86
+  "d": 0.86,
+  "t": "day",
+  "l": 0.56,
+  "r": "tabuk",
+  "p": "نيوم"
  },
  {
   "f": "_Fmibx42BVU.jpg",
   "c": "YUNUS A KHALIFAH · Unsplash",
-  "d": 0.77
+  "d": 0.77,
+  "t": "golden",
+  "l": 0.71
  },
  {
   "f": "rkRYbmPuhOE.jpg",
   "c": "Stijn te Strake · Unsplash",
-  "d": 0.72
+  "d": 0.72,
+  "t": "day",
+  "l": 0.83,
+  "r": "riyadh",
+  "p": "الرياض"
+ },
+ {
+  "f": "vAkHAP27QMk.jpg",
+  "c": "سيف الظاهر · Unsplash",
+  "d": 0.95,
+  "r": "riyadh",
+  "p": "الرياض",
+  "t": "night",
+  "l": 0.1
+ },
+ {
+  "f": "WE48Axj9gnM.jpg",
+  "c": "Ameer Albahouth · Unsplash",
+  "d": 0.95,
+  "r": "riyadh",
+  "p": "الدرعية",
+  "t": "golden",
+  "l": 0.48
+ },
+ {
+  "f": "F2aCDaQqYDo.jpg",
+  "c": "Zhifei Zhou · Unsplash",
+  "d": 0.95,
+  "r": "riyadh",
+  "p": "حافة العالم",
+  "t": "day",
+  "l": 0.65
+ },
+ {
+  "f": "CRk3Xy7kseA.jpg",
+  "c": "Arne Backhaus · Unsplash",
+  "d": 0.95,
+  "r": "riyadh",
+  "p": "حافة العالم",
+  "t": "day",
+  "l": 0.82
+ },
+ {
+  "f": "kh_c-f0o-tc.jpg",
+  "c": "Jens Aber · Unsplash",
+  "d": 0.95,
+  "r": "riyadh",
+  "p": "الرياض",
+  "t": "golden",
+  "l": 0.35
+ },
+ {
+  "f": "Ek5MReMr-Mk.jpg",
+  "c": "Ayman Akil · Unsplash",
+  "d": 0.95,
+  "r": "riyadh",
+  "p": "برج المياه، الرياض",
+  "t": "day",
+  "l": 0.57
+ },
+ {
+  "f": "92GJ720EbkA.jpg",
+  "c": "Ameer Albahouth · Unsplash",
+  "d": 0.95,
+  "r": "riyadh",
+  "p": "المركز المالي، الرياض",
+  "t": "golden",
+  "l": 0.57
+ },
+ {
+  "f": "_ABfNIGGsZk.jpg",
+  "c": "mohammed alorabi · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "المسجد العائم، جدة",
+  "t": "day",
+  "l": 0.67
+ },
+ {
+  "f": "ycEZ7wCA8uU.jpg",
+  "c": "shahad hassan · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "كورنيش جدة",
+  "t": "day",
+  "l": 0.64
+ },
+ {
+  "f": "LY2RIC12q1w.jpg",
+  "c": "Rikaz Basyouni · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "كورنيش جدة",
+  "t": "day",
+  "l": 0.64
+ },
+ {
+  "f": "7MMRFo-0J78.jpg",
+  "c": "abdullah alallah · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "جدة التاريخية",
+  "t": "night",
+  "l": 0.15
+ },
+ {
+  "f": "hrQMXsVAYgM.jpg",
+  "c": "Yasser Mutwakil ياسر متوكل · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "جدة التاريخية",
+  "t": "day",
+  "l": 0.52
+ },
+ {
+  "f": "NUSPjBIyOJE.jpg",
+  "c": "Saad Alfozan · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "بحر جدة",
+  "t": "golden",
+  "l": 0.79
+ },
+ {
+  "f": "Fl-BUtS3wYM.jpg",
+  "c": "M o e · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "بحر جدة",
+  "t": "golden",
+  "l": 0.57
+ },
+ {
+  "f": "b1UWxUR-Lew.jpg",
+  "c": "Haythem Gataa · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "مكة المكرمة",
+  "t": "day",
+  "l": 0.55
+ },
+ {
+  "f": "blbwkwHPItE.jpg",
+  "c": "tasnim umar · Unsplash",
+  "d": 0.95,
+  "r": "makkah",
+  "p": "المسجد الحرام",
+  "t": "day",
+  "l": 0.67
+ },
+ {
+  "f": "qbvAboqHkBg.jpg",
+  "c": "Yasmine Arfaoui · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "المسجد النبوي",
+  "t": "day",
+  "l": 0.59
+ },
+ {
+  "f": "tqQ-L3jHyeg.jpg",
+  "c": "Xiaoqian Shen · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "العُلا",
+  "t": "golden",
+  "l": 0.55
+ },
+ {
+  "f": "3s1PFrCy488.jpg",
+  "c": "djonk creative · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "المسجد النبوي",
+  "t": "day",
+  "l": 0.43
+ },
+ {
+  "f": "g4B1JvYXy5Y.jpg",
+  "c": "ekrem osmanoglu · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "المدينة المنورة",
+  "t": "golden",
+  "l": 0.74
+ },
+ {
+  "f": "R1gC_gJaJ14.jpg",
+  "c": "M K · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "العُلا",
+  "t": "day",
+  "l": 0.74
+ },
+ {
+  "f": "ZOYF6k7bYEI.jpg",
+  "c": "Jens Aber · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "الحِجر",
+  "t": "day",
+  "l": 0.52
+ },
+ {
+  "f": "RwShKfaErck.jpg",
+  "c": "Xiaoqian Shen · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "جبل الفيل، العُلا",
+  "t": "night",
+  "l": 0.39
+ },
+ {
+  "f": "rphnYGveFQI.jpg",
+  "c": "Arne Backhaus · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "مرايا، العُلا",
+  "t": "day",
+  "l": 0.56
+ },
+ {
+  "f": "lEMTqjgZlH0.jpg",
+  "c": "Jens Aber · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "ينبع",
+  "t": "golden",
+  "l": 0.38
+ },
+ {
+  "f": "Jgua8Q6UMaA.jpg",
+  "c": "Jumanh Jammaz · Unsplash",
+  "d": 0.95,
+  "r": "madinah",
+  "p": "المسجد النبوي",
+  "t": "night",
+  "l": 0.49
+ },
+ {
+  "f": "KW-qmD8hOx4.jpg",
+  "c": "Akil Imran · Unsplash",
+  "d": 0.95,
+  "r": "eastern",
+  "p": "الدمام",
+  "t": "day",
+  "l": 0.47
+ },
+ {
+  "f": "mRbAyH6DEcs.jpg",
+  "c": "Yousef Hussain · Unsplash",
+  "d": 0.95,
+  "r": "eastern",
+  "p": "كورنيش الخبر",
+  "t": "golden",
+  "l": 0.71
+ },
+ {
+  "f": "7HwhKAK-6Dk.jpg",
+  "c": "Akil Imran · Unsplash",
+  "d": 0.95,
+  "r": "eastern",
+  "p": "الخبر",
+  "t": "night",
+  "l": 0.31
+ },
+ {
+  "f": "jtYvTXa13pU.jpg",
+  "c": "Yousef Hussain · Unsplash",
+  "d": 0.95,
+  "r": "eastern",
+  "p": "الخبر",
+  "t": "golden",
+  "l": 0.64
+ },
+ {
+  "f": "ddFNgimew5Q.jpg",
+  "c": "Saikishore Sanagapalli · Unsplash",
+  "d": 0.95,
+  "r": "eastern",
+  "p": "الجبيل",
+  "t": "day",
+  "l": 0.65
+ },
+ {
+  "f": "AhB2Yh8dgB0.jpg",
+  "c": "Ahmed Rajgoli Shoaib Shakeel · Unsplash",
+  "d": 0.95,
+  "r": "eastern",
+  "p": "الجبيل",
+  "t": "golden",
+  "l": 0.62
+ },
+ {
+  "f": "O0GYLbzqW-o.jpg",
+  "c": "Jimil Prajapati · Unsplash",
+  "d": 0.95,
+  "r": "eastern",
+  "p": "الجبيل",
+  "t": "night",
+  "l": 0.23
+ },
+ {
+  "f": "mXVHS33b5Ks.jpg",
+  "c": "Vandan Patel · Unsplash",
+  "d": 0.95,
+  "r": "eastern",
+  "p": "الجبيل",
+  "t": "golden",
+  "l": 0.6
+ },
+ {
+  "f": "ImO6__H9wnE.jpg",
+  "c": "Rikaz Basyouni · Unsplash",
+  "d": 0.95,
+  "r": "asir",
+  "p": "أبها",
+  "t": "day",
+  "l": 0.52
+ },
+ {
+  "f": "iHej0vXizMs.jpg",
+  "c": "Abdul Basith A Y · Unsplash",
+  "d": 0.95,
+  "r": "asir",
+  "p": "أبها",
+  "t": "golden",
+  "l": 0.34
+ },
+ {
+  "f": "die5ldvzkvY.jpg",
+  "c": "Abdul Basith A Y · Unsplash",
+  "d": 0.95,
+  "r": "asir",
+  "p": "الحبلة",
+  "t": "golden",
+  "l": 0.74
+ },
+ {
+  "f": "jz8nE6vgjKc.jpg",
+  "c": "Suhail Muhammed · Unsplash",
+  "d": 0.95,
+  "r": "tabuk",
+  "p": "تبوك",
+  "t": "day",
+  "l": 0.55
+ },
+ {
+  "f": "rzMWVDocbJU.jpg",
+  "c": "SALEH · Unsplash",
+  "d": 0.95,
+  "r": "tabuk",
+  "p": "تبوك",
+  "t": "night",
+  "l": 0.18
+ },
+ {
+  "f": "qi6L0-IVWuI.jpg",
+  "c": "SALEH · Unsplash",
+  "d": 0.95,
+  "r": "tabuk",
+  "p": "تبوك",
+  "t": "golden",
+  "l": 0.67
+ },
+ {
+  "f": "cx-FBHnj9o0.jpg",
+  "c": "SALEH · Unsplash",
+  "d": 0.95,
+  "r": "tabuk",
+  "p": "تبوك",
+  "t": "night",
+  "l": 0.12
+ },
+ {
+  "f": "-aikzlgQEBU.jpg",
+  "c": "Llana · Unsplash",
+  "d": 0.95,
+  "r": "hail",
+  "p": "حائل",
+  "t": "day",
+  "l": 0.52
+ },
+ {
+  "f": "xSVmcnIfd6o.jpg",
+  "c": "Llana · Unsplash",
+  "d": 0.95,
+  "r": "hail",
+  "p": "حائل",
+  "t": "day",
+  "l": 0.24
+ },
+ {
+  "f": "88qmDe0r30w.jpg",
+  "c": "Francesco Ungaro · Unsplash",
+  "d": 0.95,
+  "r": "jazan",
+  "p": "جزر فرسان",
+  "t": "day",
+  "l": 0.35
+ },
+ {
+  "f": "THiSj6mJc6A.jpg",
+  "c": "Francesco Ungaro · Unsplash",
+  "d": 0.95,
+  "r": "jazan",
+  "p": "جزر فرسان",
+  "t": "day",
+  "l": 0.36
+ },
+ {
+  "f": "FnBxf2gh5_E.jpg",
+  "c": "Francesco Ungaro · Unsplash",
+  "d": 0.95,
+  "r": "jazan",
+  "p": "جزر فرسان",
+  "t": "day",
+  "l": 0.61
+ },
+ {
+  "f": "BcyynLRWl8M.jpg",
+  "c": "Francesco Ungaro · Unsplash",
+  "d": 0.95,
+  "r": "jazan",
+  "p": "جزر فرسان",
+  "t": "day",
+  "l": 0.34
+ },
+ {
+  "f": "TUVjBfgTxCM.jpg",
+  "c": "Francesco Ungaro · Unsplash",
+  "d": 0.95,
+  "r": "jazan",
+  "p": "جزر فرسان",
+  "t": "golden",
+  "l": 0.26
+ },
+ {
+  "f": "TBLILnV41Cw.jpg",
+  "c": "Francesco Ungaro · Unsplash",
+  "d": 0.95,
+  "r": "jazan",
+  "p": "جزر فرسان",
+  "t": "golden",
+  "l": 0.82
+ },
+ {
+  "f": "JLbpoeOy5Co.jpg",
+  "c": "Ameer Albahouth · Unsplash",
+  "d": 0.95,
+  "r": "qassim",
+  "p": "بريدة",
+  "t": "day",
+  "l": 0.45
+ },
+ {
+  "f": "wm-db9b552b47.jpg",
+  "c": "Radosław Botev · Wikimedia Commons",
+  "d": 0.95,
+  "r": "riyadh",
+  "p": "حي الطريف، الدرعية",
+  "t": "golden",
+  "l": 0.67
+ },
+ {
+  "f": "wm-8fce4e3b17.jpg",
+  "c": "Aiman titi · Wikimedia Commons",
+  "d": 0.95,
+  "r": "asir",
+  "p": "أبها",
+  "t": "night",
+  "l": 0.73
+ },
+ {
+  "f": "wm-c67059501e.jpg",
+  "c": "Saudi Press Agency (SPA) · Wikimedia Commons",
+  "d": 0.95,
+  "r": "asir",
+  "p": "رجال ألمع",
+  "t": "day",
+  "l": 0.43
+ },
+ {
+  "f": "wm-0318d05d70.jpg",
+  "c": "Heritage Commission · Wikimedia Commons",
+  "d": 0.95,
+  "r": "asir",
+  "p": "رجال ألمع",
+  "t": "day",
+  "l": 0.49
+ },
+ {
+  "f": "wm-01a12d5b2f.jpg",
+  "c": "Richard Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "asir",
+  "p": "جبال السروات، عسير",
+  "t": "day",
+  "l": 0.74
+ },
+ {
+  "f": "wm-22bd138dd9.jpg",
+  "c": "Saudi Press Agency (SPA) · Wikimedia Commons",
+  "d": 0.95,
+  "r": "hail",
+  "p": "جبال المسمى، حائل",
+  "t": "golden",
+  "l": 0.41
+ },
+ {
+  "f": "wm-6804254a08.jpg",
+  "c": "Annurios · Wikimedia Commons",
+  "d": 0.95,
+  "r": "hail",
+  "p": "قصر حاتم الطائي، حائل",
+  "t": "golden",
+  "l": 0.39
+ },
+ {
+  "f": "wm-872c54b03e.jpg",
+  "c": "Pointedstick · Wikimedia Commons",
+  "d": 0.95,
+  "r": "hail",
+  "p": "حائل",
+  "t": "night",
+  "l": 0.39
+ },
+ {
+  "f": "wm-fa97a2e13e.jpg",
+  "c": "Abothamer Homoud · Wikimedia Commons",
+  "d": 0.95,
+  "r": "hail",
+  "p": "بزاخة، حائل",
+  "t": "day",
+  "l": 0.61
+ },
+ {
+  "f": "wm-eeeab1629e.jpg",
+  "c": "Khalid Alhallabi · Wikimedia Commons",
+  "d": 0.95,
+  "r": "hail",
+  "p": "حائل",
+  "t": "day",
+  "l": 0.64
+ },
+ {
+  "f": "wm-248f1ef829.jpg",
+  "c": "Prof. Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "hail",
+  "p": "جبة",
+  "t": "day",
+  "l": 0.63
+ },
+ {
+  "f": "wm-19603ce18a.jpg",
+  "c": "D3moll3k · Wikimedia Commons",
+  "d": 0.95,
+  "r": "qassim",
+  "p": "قصر المشقوق، الرس",
+  "t": "day",
+  "l": 0.74
+ },
+ {
+  "f": "wm-6f3450f992.jpg",
+  "c": "Meshal Obeidallah at English Wikipedia · Wikimedia Commons",
+  "d": 0.95,
+  "r": "qassim",
+  "p": "جامع عنيزة",
+  "t": "golden",
+  "l": 0.59
+ },
+ {
+  "f": "wm-6f3167dfe2.jpg",
+  "c": "Meshal Obeidallah · Wikimedia Commons",
+  "d": 0.95,
+  "r": "qassim",
+  "p": "عنيزة",
+  "t": "night",
+  "l": 0.57
+ },
+ {
+  "f": "wm-55e62cbd27.jpg",
+  "c": "Richard Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "qassim",
+  "p": "عيون الجواء",
+  "t": "day",
+  "l": 0.54
+ },
+ {
+  "f": "wm-8e48fac191.jpg",
+  "c": "Heritage Commission · Wikimedia Commons",
+  "d": 0.95,
+  "r": "jouf",
+  "p": "دومة الجندل",
+  "t": "day",
+  "l": 0.55
+ },
+ {
+  "f": "wm-7a6a3ea0ef.jpg",
+  "c": "Richard Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "jouf",
+  "p": "قلعة مارد",
+  "t": "day",
+  "l": 0.62
+ },
+ {
+  "f": "wm-8d19b5a857.jpg",
+  "c": "Mojackjutaily · Wikimedia Commons",
+  "d": 0.95,
+  "r": "jouf",
+  "p": "قلعة مارد",
+  "t": "golden",
+  "l": 0.51
+ },
+ {
+  "f": "wm-7dc9ca18d2.jpg",
+  "c": "haitham alfalah · Wikimedia Commons",
+  "d": 0.95,
+  "r": "jouf",
+  "p": "قلعة مارد",
+  "t": "night",
+  "l": 0.4
+ },
+ {
+  "f": "wm-fa69ad9e6b.jpg",
+  "c": "وكالة الأنباء السعودية · Wikimedia Commons",
+  "d": 0.95,
+  "r": "jouf",
+  "p": "مزارع الزيتون، الجوف",
+  "t": "day",
+  "l": 0.59
+ },
+ {
+  "f": "wm-ba3e8447ca.jpg",
+  "c": "Prof. Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "jouf",
+  "p": "أعمدة الرجاجيل",
+  "t": "day",
+  "l": 0.71
+ },
+ {
+  "f": "wm-d058ab3349.jpg",
+  "c": "saudipics · Wikimedia Commons",
+  "d": 0.95,
+  "r": "jouf",
+  "p": "قلعة زعبل، سكاكا",
+  "t": "golden",
+  "l": 0.6
+ },
+ {
+  "f": "wm-3681a9a8bb.jpg",
+  "c": "Richard Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "najran",
+  "p": "قصر الإمارة، نجران",
+  "t": "day",
+  "l": 0.62
+ },
+ {
+  "f": "wm-cb2bd1ce51.jpg",
+  "c": "Richard Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "najran",
+  "p": "نجران",
+  "t": "day",
+  "l": 0.65
+ },
+ {
+  "f": "wm-fac348f882.jpg",
+  "c": "TacoJeddah · Wikimedia Commons",
+  "d": 0.95,
+  "r": "najran",
+  "p": "نجران",
+  "t": "golden",
+  "l": 0.71
+ },
+ {
+  "f": "wm-433cd6668b.jpg",
+  "c": "Prof. Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "najran",
+  "p": "قرن الزعفران، نجران",
+  "t": "day",
+  "l": 0.49
+ },
+ {
+  "f": "wm-f99ebab6ad.jpg",
+  "c": "Mohammad Umair Yaqub · Wikimedia Commons",
+  "d": 0.95,
+  "r": "najran",
+  "p": "الأخدود",
+  "t": "golden",
+  "l": 0.89
+ },
+ {
+  "f": "wm-44468909e4.jpg",
+  "c": "Mohammad Umair Yaqub · Wikimedia Commons",
+  "d": 0.95,
+  "r": "najran",
+  "p": "الأخدود",
+  "t": "golden",
+  "l": 0.89
+ },
+ {
+  "f": "wm-ffbe2bb3ff.jpg",
+  "c": "Saudi Press Agency (SPA) · Wikimedia Commons",
+  "d": 0.95,
+  "r": "baha",
+  "p": "عقبة الباحة",
+  "t": "day",
+  "l": 0.51
+ },
+ {
+  "f": "wm-315ada49f2.jpg",
+  "c": "Prof. Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "baha",
+  "p": "جبال السروات، الباحة",
+  "t": "day",
+  "l": 0.84
+ },
+ {
+  "f": "wm-cf97d680f5.jpg",
+  "c": "وكالة الأنباء السعودية · Wikimedia Commons",
+  "d": 0.95,
+  "r": "baha",
+  "p": "قرية ذي عين",
+  "t": "day",
+  "l": 0.72
+ },
+ {
+  "f": "wm-f56f6b9c5c.jpg",
+  "c": "Richard Mortel · Wikimedia Commons",
+  "d": 0.95,
+  "r": "baha",
+  "p": "قرية ذي عين",
+  "t": "golden",
+  "l": 0.56
+ },
+ {
+  "f": "wm-0253712b3e.jpg",
+  "c": "Saracen Count · Wikimedia Commons",
+  "d": 0.95,
+  "r": "baha",
+  "p": "قرية ذي عين",
+  "t": "night",
+  "l": 0.44
+ },
+ {
+  "f": "wm-a04b1469df.jpg",
+  "c": "Faisal Al-Abdullah · Wikimedia Commons",
+  "d": 0.95,
+  "r": "baha",
+  "p": "بلاد حوالة، الباحة",
+  "t": "day",
+  "l": 0.81
+ },
+ {
+  "f": "wm-15f0449ad6.jpg",
+  "c": "Niboj74 · Wikimedia Commons",
+  "d": 0.95,
+  "r": "northern",
+  "p": "عرعر",
+  "t": "day",
+  "l": 0.61
  }
 ]

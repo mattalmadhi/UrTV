@@ -6,6 +6,7 @@ tv.html             for the Android app: same page, but fonts and bundled photos
                     its own assets (PhotoCache.java). 2.2 MB less to parse, so the screensaver starts faster.
 """
 import base64
+import os
 import json
 import re
 import unicodedata
@@ -19,7 +20,10 @@ FONTS = {
     "__F_DISPLAY__": "ThmanyahDisplay-Bold.woff2",
 }
 # tv.html points here for fonts and bundled photos; the app answers from its assets, a browser from GitHub.
-REPO = "https://raw.githubusercontent.com/tshi-dev/UrTV/master/"
+# URTV_REPO / URTV_BRANCH: build pages for a fork (the apps get the same two from the same variables);
+# URTV_REPO_URL: any base URL instead, e.g. a local server to preview the page
+REPO = os.environ.get("URTV_REPO_URL") or "https://raw.githubusercontent.com/{}/{}/".format(
+    os.environ.get("URTV_REPO") or "tshi-dev/UrTV", os.environ.get("URTV_BRANCH") or "master")
 
 
 BASMALA = "بسم الله الرحمن الرحيم"   # compared without harakat: the API orders them its own way
@@ -220,6 +224,7 @@ def main():
     html = html.replace("__F_MARKS__", data_uri(ROOT / "assets/fonts/NotoNaskhArabic-Marks.woff2", "font/woff2"))
     teams = json.loads((ROOT / "assets/shared/teams-ar.json").read_text(encoding="utf-8"))
     html = html.replace("__TEAMS_AR__", js_json(teams))
+    html = html.replace("__REPO__", REPO)
     # by TheSportsDB id: "Al-Faisaly" and "Al Faisaly" are different clubs under one name key
     clubs = json.loads((ROOT / "assets/shared/teams.json").read_text(encoding="utf-8"))
     by_id = {c["id"]: c["ar"] for c in clubs if c.get("id") and c.get("ar")}
@@ -237,7 +242,8 @@ def main():
         entries = []
         for bg in bgs:
             u = data_uri(bg_dir / bg["file"], "image/jpeg") if inline else REPO + "assets/backgrounds/" + bg["file"]
-            entries.append(f'  {{u:"{u}", c:{js_json(bg["credit"])}, d:{bg["brightness"]}}}')
+            entries.append(f'  {{u:"{u}", f:"{bg["file"]}", c:{js_json(bg["credit"])}, d:{bg["brightness"]}, '
+                           f'r:"{bg.get("region", "")}", p:{js_json(bg.get("place", ""))}, t:"{bg.get("time", "day")}"}}')
         out = ROOT / "dist" / name
         out.parent.mkdir(exist_ok=True)
         out.write_text(page.replace("__BG_SET__", ",\n".join(entries)), encoding="utf-8")

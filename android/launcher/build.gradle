@@ -13,6 +13,13 @@ android {
         // the same version as the screensaver (see android/app/build.gradle)
         versionCode((System.getenv('GITHUB_RUN_NUMBER') ?: '1') as int)
         versionName "3.${System.getenv('GITHUB_RUN_NUMBER') ?: '0'}"
+        // where the hosted photos and fonts live: the same two variables as the screensaver (android/app/build.gradle)
+        buildConfigField "String", "REPO", "\"${System.getenv('URTV_REPO') ?: 'tshi-dev/UrTV'}\""
+        buildConfigField "String", "BRANCH", "\"${System.getenv('URTV_BRANCH') ?: 'master'}\""
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     signingConfigs {

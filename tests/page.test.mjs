@@ -56,7 +56,7 @@ for (const file of ['urtv.html', 'tv.html']) {
       const latin = (document.querySelector('.stage').innerText.match(/[0-9]+/g) || []).filter(x => x !== '500');
       return { hh, mm, h: toN(hh), m: toN(mm), ap: document.getElementById('ck-ap').textContent,
                sub: document.getElementById('clock-sub').textContent, off, latin,
-               photo: !!document.querySelector('.photo').style.backgroundImage };
+               photo: !!(document.querySelector('.photo.on') || {style: {}}).style.backgroundImage };
     });
     check(`${tag}: 12-hour clock in Arabic digits`, /^[٠-٩]{1,2}$/.test(r.hh) && r.h >= 1 && r.h <= 12
       && /^[٠-٩]{2}$/.test(r.mm) && r.m < 60 && ['ص', 'م'].includes(r.ap), JSON.stringify(r));
@@ -230,7 +230,90 @@ for (const panel of ['prayers', 'verse', 'shows']) {
 
   await p.evaluate(`KEPT['136013'] = [${game('g1', 27, [2, 1], 'FT')}]; renderMatches();`);
   t = await slot();
-  check('a day later: score gone, next fixture shown', !t.includes('٢ - ١') && t.includes('×'), t);
+  check('a day later: score gone, next fixture shown', !t.includes('٢ - ١') && t.includes('بعد'), t);
+  await ctx.close();
+}
+
+// ---- backgrounds: one region a day (its own region on Friday), the photo matched to the hour, never twice in a row
+{
+  const { p, ctx, errors } = await open('tv.html', 'city=جدة&lat=21.5433&lon=39.1728');
+  const r = await p.evaluate(() => {
+    const bad = [], day0 = riyadhDayNumber(), real = {isFriday, photoTime};
+    window.isFriday = () => false;
+    const regions = new Set();
+    for (let k = 0; k < 13; k++) {
+      window.riyadhDayNumber = () => day0 + k;
+      const want = REGION_LOOP[(day0 + k) % 13];
+      regions.add(regionOfDay());
+      for (const t of ['day', 'golden', 'night']) {
+        window.photoTime = () => t;
+        const own = REMOTE_BGS.filter(b => b.r === want), timed = own.filter(b => b.t === t);
+        let last = '';
+        for (let slot = 0; slot < 8; slot++) {
+          const b = pickPhoto(REMOTE_BGS, slot);
+          if (!b) { bad.push(`${want}/${t}: none`); break; }
+          if (own.length >= 2 && b.r !== want) bad.push(`${want}/${t}: ${b.r}`);
+          if (timed.length && b.r === want && b.t !== t) bad.push(`${want}/${t}: a ${b.t} photo`);
+          if (b.f === last && regionPool(REMOTE_BGS, want, t).length > 1) bad.push(`${want}/${t}: same photo twice`);
+          last = LAST_PHOTO = b.f;
+        }
+      }
+    }
+    window.isFriday = () => true; window.photoTime = real.photoTime;
+    const friday = regionOfDay();
+    CONFIG.region = 'asir';
+    const fridayAsir = regionOfDay();
+    const line = placeLine({r: 'tabuk', p: 'نيوم'}), line2 = placeLine({r: 'hail', p: 'حائل'});
+    return { bad: bad.slice(0, 6), regions: regions.size, friday, fridayAsir, line, line2 };
+  });
+  check('backgrounds: the 13 regions in 13 days, each its own photos for the hour, no repeats', !errors.length
+    && r.regions === 13 && !r.bad.length, JSON.stringify(r) + errors.join('; '));
+  check('backgrounds: Friday is the household\'s region (Jeddah → Makkah, #region=asir → Asir)',
+    r.friday === 'makkah' && r.fridayAsir === 'asir', JSON.stringify(r));
+  check('backgrounds: the place line', r.line === 'نيوم · منطقة تبوك' && r.line2 === 'منطقة حائل', r.line + ' | ' + r.line2);
+  const shown = await p.evaluate(() => ({ text: document.getElementById('place').textContent,
+    layers: document.querySelectorAll('.photo.on').length, scrim: getComputedStyle(document.documentElement).getPropertyValue('--scrim') }));
+  check('backgrounds: one layer on, the place named, the veil set', shown.layers === 1 && shown.text.includes('منطقة')
+    && +shown.scrim >= .72 && +shown.scrim <= 1, JSON.stringify(shown));
+  await ctx.close();
+}
+
+// ---- matches: badges, a monogram when there is none, states; match day takes the card
+{
+  const { p, ctx, errors } = await open('tv.html', 'teams=136013&panel=verse');
+  const ev = (id, hrs, extra = '') => `({idEvent:'${id}', strHomeTeam:'Al-Hilal', idHomeTeam:'136013', strAwayTeam:'Al-Nassr',
+    idAwayTeam:'134468', strHomeTeamBadge:'https://badge.invalid/hilal.png', strTimestamp:new Date(Date.now() + ${hrs} * 36e5).toISOString()${extra}})`;
+  await p.evaluate(`MATCHES['136013'] = ${ev('m1', 30)}; renderMatches(); renderPanel(false);`);
+  await p.waitForTimeout(600);
+  let r = await p.evaluate(() => ({ imgs: document.querySelectorAll('#match-row .badge img').length,
+    monos: [...document.querySelectorAll('#match-row .mono')].filter(m => getComputedStyle(m).visibility !== 'hidden').length,
+    mine: document.querySelectorAll('#match-row .side.mine').length, cls: document.querySelector('#match-row .mblock').className,
+    hd: document.getElementById('week-hd').textContent }));
+  check('matches: a badge that fails to load becomes a monogram, never a broken image', !errors.length
+    && r.imgs === 0 && r.monos === 2 && r.mine === 1 && r.cls.includes('upcoming'), JSON.stringify(r) + errors.join('; '));
+  check('matches: 30 hours out, the chosen card stays', r.hd !== 'مباراة اليوم', r.hd);
+  await p.evaluate(`MATCHES['136013'] = ${ev('m2', 2)}; renderMatches(); renderPanel(false);`);
+  r = await p.evaluate(() => ({ hd: document.getElementById('week-hd').textContent, n: document.querySelectorAll('#week-list li.stage-match').length }));
+  check('match day: 2 hours before kick-off the card is the match', r.hd === 'مباراة اليوم' && r.n === 1, JSON.stringify(r));
+  await p.evaluate(`MATCHES['136013'] = ${ev('m2', -0.5, ", intHomeScore:1, intAwayScore:0, strProgress:'30'")}; renderMatches(); renderPanel(false);`);
+  r = await p.evaluate(() => ({ hd: document.getElementById('week-hd').textContent, row: document.getElementById('match-row').innerText,
+    dot: document.querySelectorAll('.live-dot').length }));
+  check('match day: live, score and minute, the dot', r.hd === 'مباشر الآن' && r.row.includes('١ - ٠') && r.row.includes('٣٠') && r.dot >= 1, JSON.stringify(r));
+  await p.evaluate(`MATCHES['136013'] = ${ev('m2', -2, ", intHomeScore:2, intAwayScore:3, strStatus:'FT'")}; keepResult('136013', MATCHES['136013']); renderMatches(); renderPanel(false);`);
+  r = await p.evaluate(() => ({ hd: document.getElementById('week-hd').textContent, lose: document.querySelectorAll('#match-row .final .side.lose').length,
+    win: document.querySelectorAll('#match-row .final .side.win').length }));
+  check('final whistle: the card goes back, the loser dimmed', ['آية اليوم', 'حديث اليوم'].includes(r.hd) && r.lose === 1 && r.win === 1, JSON.stringify(r));
+  await ctx.close();
+}
+
+// ---- the middle panel: the next occasion
+{
+  const { p, ctx, errors } = await open('tv.html', '');
+  const r = await p.evaluate(() => ({ l: document.getElementById('ramadan-label').textContent,
+    d: document.getElementById('ramadan-days').textContent, s: document.getElementById('ramadan-sub').textContent }));
+  const names = ['رمضان', 'عيد الفطر', 'يوم عرفة', 'عيد الأضحى', 'اليوم الوطني', 'يوم التأسيس'];
+  check('middle panel: the next occasion, named, with how long', !errors.length && (r.l === 'المناسبة القادمة' && names.includes(r.d.trim())
+    && r.s.length > 2 || r.l.includes('رمضان')), JSON.stringify(r));
   await ctx.close();
 }
 

@@ -166,6 +166,7 @@ final class Prefs {
         List<String> ids = new ArrayList<>();
         for (String s : shows()) ids.add(s.split("\\|", 2)[0]);
         return "city=" + Uri.encode(city[0]) + "&lat=" + city[1] + "&lon=" + city[2]
+            + "&region=" + regionId(city[0])
             + "&tz=" + Uri.encode(TZ)
             + "&teams=" + join(teamIds(), ",")
             + "&panel=" + panel()
@@ -175,6 +176,33 @@ final class Prefs {
             + "&shows=" + join(ids, ",")
             + "&minrating=" + minRating()
             + "&photos=" + photoMinutes();
+    }
+
+    /** The photos' region id of a city from the app's list ("" for one set by coordinates: the page takes the nearest). */
+    static String regionId(String cityName) {
+        for (Cities.Region r : Cities.REGIONS)
+            for (String[] c : r.cities)
+                if (c[0].equals(cityName)) return regionIdOf(r.name);
+        return "";
+    }
+
+    static String regionIdOf(String regionName) {
+        switch (regionName) {
+            case "منطقة الرياض": return "riyadh";
+            case "منطقة مكة المكرمة": return "makkah";
+            case "منطقة المدينة المنورة": return "madinah";
+            case "منطقة القصيم": return "qassim";
+            case "المنطقة الشرقية": return "eastern";
+            case "منطقة عسير": return "asir";
+            case "منطقة تبوك": return "tabuk";
+            case "منطقة حائل": return "hail";
+            case "منطقة الحدود الشمالية": return "northern";
+            case "منطقة جازان": return "jazan";
+            case "منطقة نجران": return "najran";
+            case "منطقة الباحة": return "baha";
+            case "منطقة الجوف": return "jouf";
+            default: return "";
+        }
     }
 
     /** The card on the launcher's home screen: one of PANELS, off ("none") until the user picks one. */

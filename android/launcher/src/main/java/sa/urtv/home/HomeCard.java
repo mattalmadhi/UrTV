@@ -23,7 +23,7 @@ import java.util.Collections;
  */
 final class HomeCard {
     private static final Uri CONFIG = Uri.parse("content://sa.urtv.screensaver.config");
-    private static final String FONTS = "https://raw.githubusercontent.com/tshi-dev/UrTV/master/assets/fonts/";
+    private static final String FONTS = "https://raw.githubusercontent.com/" + BuildConfig.REPO + "/" + BuildConfig.BRANCH + "/assets/fonts/";
 
     private final Activity activity;
     private final ViewGroup parent;
