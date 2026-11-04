@@ -137,7 +137,6 @@ From [Unsplash](https://unsplash.com), under the [Unsplash License](https://unsp
 | `photos/iHej0vXizMs.jpg` | Abdul Basith A Y | [unsplash](https://unsplash.com/photos/iHej0vXizMs) |
 | `photos/die5ldvzkvY.jpg` | Abdul Basith A Y | [unsplash](https://unsplash.com/photos/die5ldvzkvY) |
 | `photos/jz8nE6vgjKc.jpg` | Suhail Muhammed | [unsplash](https://unsplash.com/photos/jz8nE6vgjKc) |
-| `photos/rzMWVDocbJU.jpg` | SALEH | [unsplash](https://unsplash.com/photos/rzMWVDocbJU) |
 | `photos/qi6L0-IVWuI.jpg` | SALEH | [unsplash](https://unsplash.com/photos/qi6L0-IVWuI) |
 | `photos/cx-FBHnj9o0.jpg` | SALEH | [unsplash](https://unsplash.com/photos/cx-FBHnj9o0) |
 | `photos/-aikzlgQEBU.jpg` | Llana | [unsplash](https://unsplash.com/photos/-aikzlgQEBU) |
@@ -169,7 +168,6 @@ For the regions Unsplash barely covers. Each is under the licence named next to 
 | `photos/wm-248f1ef829.jpg` | Prof. Mortel (CC BY 2.0, cropped to 1920×1080) | [commons](https://commons.wikimedia.org/wiki/File:Jubbah_rock_art_showing_camels,_hunters_and_Thamudic_inscriptions_(3).jpg) |
 | `photos/wm-19603ce18a.jpg` | D3moll3k (CC0, cropped to 1920×1080) | [commons](https://commons.wikimedia.org/wiki/File:Al-Mashqouq_castle.jpg) |
 | `photos/wm-6f3450f992.jpg` | Meshal Obeidallah at English Wikipedia (Public domain, cropped to 1920×1080) | [commons](https://commons.wikimedia.org/wiki/File:Grand_Mosque_of_Unayzah.jpg) |
-| `photos/wm-6f3167dfe2.jpg` | Meshal Obeidallah (Public domain, cropped to 1920×1080) | [commons](https://commons.wikimedia.org/wiki/File:Unaizah_Hotel.jpg) |
 | `photos/wm-55e62cbd27.jpg` | Richard Mortel (CC BY 2.0, cropped to 1920×1080) | [commons](https://commons.wikimedia.org/wiki/File:Uyun_al-Jawa_Heritage_Village,_Qassim_Region,_Saudi_Arabia.jpg) |
 | `photos/wm-8e48fac191.jpg` | Heritage Commission (CC BY-SA 4.0, cropped to 1920×1080) | [commons](https://commons.wikimedia.org/wiki/File:1%D8%AD%D9%8A_%D8%A7%D9%84%D8%AF%D8%B1%D8%B9.jpg) |
 | `photos/wm-7a6a3ea0ef.jpg` | Richard Mortel (CC BY 2.0, cropped to 1920×1080) | [commons](https://commons.wikimedia.org/wiki/File:Marid_Castle,_Dumat_al-Jandal,_Saudi_Arabia,_ca._1st_cent._CE_(1).jpg) |
