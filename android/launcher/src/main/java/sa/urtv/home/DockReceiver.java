@@ -75,6 +75,13 @@ public class DockReceiver extends BroadcastReceiver {
                 setResultData((hide ? "hidden: " : "shown: ") + String.join(",", pkgs));
                 return;
             }
+            case "sa.urtv.home.TV_KEY": {   // --es app PKG to set it, --es app none to clear it, nothing to read it
+                String app = i.getStringExtra("app");
+                if (app != null) Dock.prefs(c).edit().putString("tvKeyApp", "none".equals(app) ? "" : app.trim()).apply();
+                String now = Dock.prefs(c).getString("tvKeyApp", "");
+                setResultData(now.isEmpty() ? "tv key: the TV's own" : "tv key: " + now);
+                return;
+            }
             default:
                 setResultData("error: unknown action " + action);
         }
