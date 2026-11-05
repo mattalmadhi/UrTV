@@ -85,7 +85,7 @@ public class SettingsActivity extends Activity {
         preview.setPivotY(0);
         preview.setScaleX(previewW / (float) dm.widthPixels);
         preview.setScaleY(previewW / (float) dm.widthPixels);
-        clip.addView(preview, new android.widget.FrameLayout.LayoutParams(dm.widthPixels, dm.heightPixels));
+        clip.addView(preview, new android.widget.FrameLayout.LayoutParams(dm.widthPixels, dm.heightPixels, Gravity.LEFT | Gravity.TOP));
         left.addView(clip, new LinearLayout.LayoutParams(previewW, previewH));
         previewUrl = new Prefs(this).dashboardUrl(this);
         LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(previewW, -1);
@@ -161,7 +161,7 @@ public class SettingsActivity extends Activity {
 
         header("شاشة التوقف");
         row("المشاهد", sceneLabels(), R.drawable.ic_screensaver, new Runnable() { public void run() { pickScenes(); } });
-        row("مدة كل مشهد", TextUtilsAr.digits(prefs.sceneMinutes()) + " دقائق", R.drawable.ic_sync, new Runnable() { public void run() { pickSceneMinutes(); } });
+        row("مدة كل مشهد", sceneMinutesLabel(prefs.sceneMinutes()), R.drawable.ic_sync, new Runnable() { public void run() { pickSceneMinutes(); } });
         row("لحظة الأذان", prefs.moment() ? "تظهر الصلاة وحدها حتى الإقامة" : "متوقفة", R.drawable.ic_eye,
             new Runnable() { public void run() { prefs.setMoment(!prefs.moment()); render(); } });
         row("بجانب الساعة", Prefs.panelLabel(prefs.panel()), R.drawable.ic_eye, new Runnable() { public void run() { pickPanel(false); } });
@@ -462,11 +462,15 @@ public class SettingsActivity extends Activity {
         });
     }
 
+    private static String sceneMinutesLabel(String v) {
+        return "2".equals(v) ? "دقيقتان" : TextUtilsAr.digits(v) + " دقائق";
+    }
+
     private void pickSceneMinutes() {
         String[] labels = new String[Prefs.SCENE_MINUTES.length];
         int sel = 0;
         for (int i = 0; i < labels.length; i++) {
-            labels[i] = TextUtilsAr.digits(Prefs.SCENE_MINUTES[i]) + " دقائق";
+            labels[i] = sceneMinutesLabel(Prefs.SCENE_MINUTES[i]);
             if (Prefs.SCENE_MINUTES[i].equals(prefs.sceneMinutes())) sel = i;
         }
         new AlertDialog.Builder(this, DIALOG_THEME).setTitle("مدة كل مشهد")

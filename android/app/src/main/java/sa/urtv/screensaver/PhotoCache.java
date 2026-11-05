@@ -59,7 +59,13 @@ final class PhotoCache {
 
     /** Runs on the WebView's network thread, so a blocking download is fine. */
     private static synchronized File hosted(Context c, String url, String name) throws java.io.IOException {
-        File dir = new File(c.getFilesDir(), "photos");
+        File old = new File(c.getFilesDir(), "photos");   // the soft Wikimedia copies, same names: start again
+        if (old.isDirectory()) {
+            File[] stale = old.listFiles();
+            if (stale != null) for (File f : stale) f.delete();
+            old.delete();
+        }
+        File dir = new File(c.getFilesDir(), "photos2");
         File f = new File(dir, name);
         if (f.isFile() && f.length() > 0) return f;
         if (!dir.isDirectory() && !dir.mkdirs()) return null;

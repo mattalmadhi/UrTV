@@ -255,7 +255,7 @@ public class MainActivity extends Activity {
         hero.addView(bottom, lp(-1, -2, Gravity.BOTTOM, dp(48), 0, dp(48), dp(30)));
 
         today = new TodayRow(this, prefs(), this::font, getResources().getDisplayMetrics().density);
-        bottom.addView(today.view(), llp(-1, dp(66), 0, 0, 0, dp(12)));
+        bottom.addView(today.view(), llp(-1, dp(84), 0, 0, 0, dp(12)));
 
         // The focused app's name on a panel tinted with the app's colour, so it reads over any photo.
         title = text(24, "display", Color.WHITE);
@@ -892,7 +892,13 @@ public class MainActivity extends Activity {
 
     /** Keep only the current set on disk. */
     private void pruneCachedPhotos(String[] keep) {
-        java.io.File[] files = new java.io.File(getFilesDir(), "photos").listFiles();
+        java.io.File old = new java.io.File(getFilesDir(), "photos");   // the soft Wikimedia copies, same names: start again
+        if (old.isDirectory()) {
+            java.io.File[] stale = old.listFiles();
+            if (stale != null) for (java.io.File f : stale) f.delete();
+            old.delete();
+        }
+        java.io.File[] files = new java.io.File(getFilesDir(), "photos2").listFiles();
         if (files == null) return;
         java.util.Set<String> k = new java.util.HashSet<>(Arrays.asList(keep));
         for (java.io.File f : files) if (!k.contains(f.getName())) f.delete();
@@ -970,7 +976,7 @@ public class MainActivity extends Activity {
             try (java.io.InputStream in = getAssets().open("wallpapers/" + p.f)) { return decode(in); }
             catch (java.io.IOException ignored) { }
         }
-        java.io.File f = new java.io.File(getFilesDir(), "photos/" + p.f);
+        java.io.File f = new java.io.File(getFilesDir(), "photos2/" + p.f);
         try {
             if (!f.isFile()) {
                 byte[] data = download(PHOTO_BASE + f.getName());
@@ -1009,7 +1015,7 @@ public class MainActivity extends Activity {
             }
             pruneCachedPhotos(remotePhotos());
             if (idx >= wallpapers.length) {
-                java.io.File f = new java.io.File(getFilesDir(), "photos/" + remote[idx - wallpapers.length]);
+                java.io.File f = new java.io.File(getFilesDir(), "photos2/" + remote[idx - wallpapers.length]);
                 try {
                     if (!f.isFile()) {
                         byte[] data = download(PHOTO_BASE + f.getName());

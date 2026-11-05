@@ -51,10 +51,9 @@ final class TodayRow {
         this.a = a;
         this.store = store;
         row = new LinearLayout(a);
-        row.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setFocusable(false);
-        for (String key : new String[]{"prayer", "match", "weather", "occasion"}) row.addView(chip(key, fonts, density));
+        for (String key : new String[]{"occasion", "weather", "match", "prayer"}) row.addView(chip(key, fonts, density));
     }
 
     interface Fonts { Typeface get(String family); }
@@ -64,7 +63,7 @@ final class TodayRow {
     private View chip(String key, Fonts fonts, float d) {
         LinearLayout box = new LinearLayout(a);
         box.setOrientation(LinearLayout.VERTICAL);
-        box.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
+        box.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
         int px = Math.round(14 * d), py = Math.round(8 * d);
         box.setPadding(px, py, px, py);
         GradientDrawable bg = new GradientDrawable();
@@ -79,18 +78,18 @@ final class TodayRow {
         box.addView(label);
         if ("match".equals(key)) {
             LinearLayout line = new LinearLayout(a);
-            line.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             line.setGravity(Gravity.CENTER_VERTICAL);
             int s = Math.round(20 * d), m = Math.round(6 * d);
             badgeHome = badge(s);
             badgeAway = badge(s);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(s, s);
-            lp.setMarginEnd(m);
-            line.addView(badgeHome, lp);
+            lp.setMargins(0, 0, m, 0);
+            line.addView(badgeAway, lp);
+            value.setGravity(Gravity.CENTER);
             line.addView(value, new LinearLayout.LayoutParams(0, -2, 1f));
             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(s, s);
-            lp2.setMarginStart(m);
-            line.addView(badgeAway, lp2);
+            lp2.setMargins(m, 0, 0, 0);
+            line.addView(badgeHome, lp2);
             box.addView(line);
         } else {
             box.addView(value);
@@ -203,7 +202,7 @@ final class TodayRow {
             JSONObject w = new JSONObject(store.getString("todayWx", ""));
             String sky = SKY.containsKey(w.getInt("c")) ? SKY.get(w.getInt("c")) : "";
             set("weather", label, digits(String.valueOf(Math.round(w.getDouble("t")))) + "°  " + sky,
-                digits(Math.round(w.getDouble("hi")) + "") + "° / " + digits(Math.round(w.getDouble("lo")) + "") + "°");
+                digits(Math.round(w.getDouble("hi")) + "") + "°‏ / " + digits(Math.round(w.getDouble("lo")) + "") + "°‏");
         } catch (Exception e) { set("weather", label, "—", ""); }
     }
 
