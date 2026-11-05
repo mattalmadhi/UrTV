@@ -18,7 +18,7 @@ import java.util.List;
  *   am broadcast -n sa.urtv.screensaver/.SaverReceiver -a sa.urtv.screensaver.SET
  *       [--es city 'الرس'] [--es lat 25.86 --es lon 43.49] [--es teams '136013:Al-Hilal,150643:Al-Zulfi']
  *       [--es panel prayers] [--es home_panel none] [--es minrating 7] [--es genres Drama,Comedy] [--es langs English]
- *       [--es photos 30] [--es idle 10]
+ *       [--es photos 30] [--es idle 10] [--es scenes calm,faith,info] [--es scene_min 3] [--es moment 1]
  *   am broadcast -n sa.urtv.screensaver/.SaverReceiver -a sa.urtv.screensaver.UPDATE
  *
  * photos = minutes between background photos (Prefs.PHOTO_MINUTES). idle = minutes before the TV starts the
@@ -107,6 +107,18 @@ public class SaverReceiver extends BroadcastReceiver {
         String photos = i.getStringExtra("photos");
         if (photos != null && !Arrays.asList(Prefs.PHOTO_MINUTES).contains(photos))
             return "error: photos is one of " + Prefs.join(Arrays.asList(Prefs.PHOTO_MINUTES), " ");
+        String scenes = i.getStringExtra("scenes"), sceneMin = i.getStringExtra("scene_min"), moment = i.getStringExtra("moment");
+        List<String> sceneList = null;
+        if (scenes != null) {
+            sceneList = new ArrayList<>();
+            for (String s : scenes.split(",")) {
+                if (!Prefs.isScene(s.trim())) return "error: scenes are " + names(Prefs.SCENES);
+                sceneList.add(s.trim());
+            }
+        }
+        if (sceneMin != null && !Arrays.asList(Prefs.SCENE_MINUTES).contains(sceneMin))
+            return "error: scene_min is one of " + Prefs.join(Arrays.asList(Prefs.SCENE_MINUTES), " ");
+        if (moment != null && !moment.equals("0") && !moment.equals("1")) return "error: moment is 0 or 1";
         String idle = i.getStringExtra("idle");
         if (idle != null) {
             if (!Arrays.asList(Prefs.IDLE_MINUTES).contains(idle))
@@ -134,6 +146,9 @@ public class SaverReceiver extends BroadcastReceiver {
         if (home != null) p.setHomePanel(home);
         if (rating != null) p.setMinRating(rating);
         if (photos != null) p.setPhotoMinutes(photos);
+        if (sceneList != null) p.setScenes(sceneList);
+        if (sceneMin != null) p.setSceneMinutes(sceneMin);
+        if (moment != null) p.setMoment(moment.equals("1"));
         if (genres != null) p.setList("genres", genres);
         if (langs != null) p.setList("langs", langs);
         return "saved\n" + describe(c, p);
@@ -146,6 +161,7 @@ public class SaverReceiver extends BroadcastReceiver {
             + "\npanel: " + p.panel() + "\nhome_panel: " + p.homePanel()
             + "\nminrating: " + p.minRating()
             + "\nphotos: " + p.photoMinutes()
+            + "\nscenes: " + Prefs.join(p.scenes(), ",") + " every " + p.sceneMinutes() + " min, adhan moment: " + p.moment()
             + "\nidle: " + idle(Prefs.idleMs(c))
             + "\ngenres: " + Prefs.join(p.list("genres"), ",") + "\nlangs: " + Prefs.join(p.list("langs"), ",")
             + "\nautoupdate: " + p.autoUpdate();

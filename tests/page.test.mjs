@@ -355,6 +355,81 @@ for (const panel of ['prayers', 'verse', 'shows']) {
   await ctx.close();
 }
 
+// ---- scenes: less on the screen at a time, the right card in each, the match takes over
+{
+  const { p, ctx, errors } = await open('tv.html', 'teams=136013&panel=adhkar&scenes=calm,faith,info&scenemin=3');
+  const vis = s => `getComputedStyle(document.querySelector('${s}')).visibility`;
+  const state = () => p.evaluate(`({ week:${vis('.week')}, wx:${vis('.markets')}, prayer:${vis('.p-prayer')}, match:${vis('.p-match')}, panel:panelNow() })`);
+  await p.evaluate(`setScene('calm')`); await p.waitForTimeout(1100);
+  let s = await state();
+  check('scene calm: no card, no panels, no weather', s.week === 'hidden' && s.wx === 'hidden' && s.prayer === 'hidden', JSON.stringify(s));
+  await p.evaluate(`setScene('faith')`); await p.waitForTimeout(1100);
+  s = await state();
+  check('scene faith: the dhikr and the prayer, no matches', s.week === 'visible' && s.prayer === 'visible' && s.match === 'hidden' && s.panel === 'adhkar', JSON.stringify(s));
+  await p.evaluate(`setScene('info')`); await p.waitForTimeout(1100);
+  s = await state();
+  check('scene info: weather, matches, the forecast on the card', s.wx === 'visible' && s.match === 'visible' && s.panel === 'forecast', JSON.stringify(s));
+  const turn = await p.evaluate(() => { const real = riyadhParts, out = new Set();
+    for (const mi of [0, 3, 6]) { window.riyadhParts = () => Object.assign(real(), { h: 10, mi }); tickScene(); out.add(SCENE); }
+    MATCHES['136013'] = { idEvent: 'z', strHomeTeam: 'A', strAwayTeam: 'B', strTimestamp: new Date(Date.now() + 36e5).toISOString() };
+    window.riyadhParts = () => Object.assign(real(), { h: 10, mi: 0 }); tickScene();
+    return { n: out.size, match: SCENE }; });
+  check('scenes turn every 3 minutes; a match keeps the info scene up', !errors.length && turn.n === 3 && turn.match === 'info', JSON.stringify(turn) + errors.join('; '));
+  await ctx.close();
+}
+
+// ---- the clock on the quiet side: nothing overlaps either way, at any size
+for (const [width, height] of [[1920, 1080], [1280, 720]]) {
+  const { p, ctx, errors } = await open('tv.html', 'panel=adhkar', { width, height });
+  const r = await p.evaluate(() => {
+    const box = s => document.querySelector(s).getBoundingClientRect(), out = {};
+    for (const left of [false, true]) {
+      document.documentElement.classList.toggle('clock-left', left);
+      const c = box('.clockwrap'), w = box('.week');
+      out[left ? 'left' : 'right'] = { clockLeft: c.left < w.left, clear: c.right <= w.left + 1 || w.right <= c.left + 1, on: c.left >= 0 && c.right <= innerWidth };
+    }
+    return out;
+  });
+  check(`clock side at ${width}x${height}: swaps sides, never over the card`, !errors.length && !r.right.clockLeft && r.left.clockLeft
+    && r.right.clear && r.left.clear && r.right.on && r.left.on, JSON.stringify(r) + errors.join('; '));
+  await ctx.close();
+}
+
+// ---- the adhan moment: only the prayer until the iqama, then back
+{
+  const { p, ctx, errors } = await open('tv.html', 'panel=adhkar&moment=1');
+  await p.waitForFunction(() => PRAYERS.length > 0, null, { timeout: 15000 }).catch(() => errors.push('no prayers'));
+  const r = await p.evaluate(() => {
+    const real = riyadhParts, m = PRAYERS.find(x => x.key === 'Maghrib'), at = (off) => {
+      const t = m.h * 60 + m.mi + off;
+      window.riyadhParts = () => Object.assign(real(), { h: Math.floor(t / 60), mi: t % 60, s: 0 });
+      tickPrayer();
+      return { on: document.documentElement.classList.contains('in-moment'), name: document.getElementById('m-name').textContent, iq: document.getElementById('m-iqama').textContent };
+    };
+    return { before: at(-5), during: at(3), after: at(11) };
+  });
+  check('adhan: before no, during the prayer and its iqama, after no', !errors.length && !r.before.on && r.during.on && r.during.name === 'المغرب'
+    && r.during.iq.includes('الإقامة') && !r.after.on, JSON.stringify(r) + errors.join('; '));
+  await ctx.close();
+}
+
+// ---- seasons: accent, greeting and photos follow the date
+{
+  const { p, ctx, errors } = await open('tv.html', 'city=جدة&lat=21.5433&lon=39.1728');
+  const r = await p.evaluate(() => {
+    window.seasonNow = () => ({ id: 'national', label: 'اليوم الوطني', regions: ['riyadh'] });
+    applySeason();
+    const out = { theme: document.documentElement.dataset.theme, gold: getComputedStyle(document.documentElement).getPropertyValue('--gold').trim(),
+      sub: document.getElementById('clock-sub').textContent, region: regionOfDay() };
+    window.seasonNow = () => null; applySeason();
+    out.none = document.documentElement.dataset.theme === undefined;
+    return out;
+  });
+  check('season: green on National Day, the greeting, Riyadh\'s photos; none on other days', !errors.length && r.theme === 'national'
+    && r.gold === '#5FD08F' && r.sub.startsWith('اليوم الوطني') && r.region === 'riyadh' && r.none, JSON.stringify(r) + errors.join('; '));
+  await ctx.close();
+}
+
 await browser.close();
 console.log(failed ? `\n${failed} failed` : '\nall page tests passed');
 process.exit(failed ? 1 : 0);

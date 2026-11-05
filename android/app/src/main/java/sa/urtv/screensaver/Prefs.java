@@ -118,6 +118,28 @@ final class Prefs {
         {"none", "لا شيء"},
     };
 
+    // What is on the screensaver at a time, in turn: value sent to the page (#scenes=), Arabic label
+    static final String[][] SCENES = {
+        {"calm", "هادئ: الصورة والساعة"}, {"faith", "إيماني: الذكر والصلاة"}, {"info", "معلومات: الطقس والمباريات"},
+    };
+    static final String[] SCENE_MINUTES = {"2", "3", "5", "10"};
+
+    List<String> scenes() {
+        List<String> v = new ArrayList<>();
+        for (String s : sp.getString("scenes", "calm,faith,info").split(",")) if (isScene(s)) v.add(s);
+        return v;
+    }
+    void setScenes(List<String> v) { sp.edit().putString("scenes", join(v, ",")).apply(); }
+    static boolean isScene(String v) {
+        for (String[] s : SCENES) if (s[0].equals(v)) return true;
+        return false;
+    }
+    String sceneMinutes() { return sp.getString("sceneMinutes", "3"); }
+    void setSceneMinutes(String v) { sp.edit().putString("sceneMinutes", v).apply(); }
+    /** At the adhan only the prayer is on the screensaver, until the iqama. */
+    boolean moment() { return sp.getBoolean("moment", true); }
+    void setMoment(boolean v) { sp.edit().putBoolean("moment", v).apply(); }
+
     /** Older builds had an on/off switch for the card; off becomes "none", otherwise the verse card. */
     String panel() { return sp.getString("panel", sp.getBoolean("showWeek", true) ? "verse" : "none"); }
     void setPanel(String v) { sp.edit().putString("panel", v).apply(); }
@@ -176,7 +198,9 @@ final class Prefs {
             + "&langs=" + Uri.encode(join(list("langs"), ","))
             + "&shows=" + join(ids, ",")
             + "&minrating=" + minRating()
-            + "&photos=" + photoMinutes();
+            + "&photos=" + photoMinutes()
+            + "&scenes=" + join(scenes(), ",") + "&scenemin=" + sceneMinutes()
+            + "&moment=" + (moment() ? "1" : "0");
     }
 
     /** The photos' region id of a city from the app's list ("" for one set by coordinates: the page takes the nearest). */

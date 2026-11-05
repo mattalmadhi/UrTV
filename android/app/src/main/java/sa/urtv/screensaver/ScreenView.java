@@ -17,7 +17,7 @@ final class ScreenView {
     @SuppressWarnings("deprecation")
     static WebView create(final Context c) {
         WebView w = new WebView(c);
-        w.setBackgroundColor(0xFF040E09);   // no white flash before the page paints
+        w.setBackgroundColor(Tokens.INK);   // no white flash before the page paints
         w.setFocusable(false);
         w.setVerticalScrollBarEnabled(false);
         w.setHorizontalScrollBarEnabled(false);

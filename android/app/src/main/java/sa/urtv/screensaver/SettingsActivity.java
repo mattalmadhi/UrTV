@@ -34,6 +34,8 @@ public class SettingsActivity extends Activity {
 
     private Prefs prefs;
     private LinearLayout list;
+    private android.webkit.WebView preview;
+    private String previewUrl;
 
     /** Arabic locale for this screen, so every dialog title, list and button is laid out right-to-left. */
     @Override
@@ -49,39 +51,99 @@ public class SettingsActivity extends Activity {
         super.onCreate(b);
         prefs = new Prefs(this);
         UpdateJob.schedule(this);
+        // Two panes: the real screensaver on the left, updating as you choose; the list on the right.
+        android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
+        LinearLayout panes = new LinearLayout(this);
+        panes.setOrientation(LinearLayout.HORIZONTAL);
+        panes.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        panes.setBackground(new android.graphics.drawable.GradientDrawable(
+            android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, new int[]{Tokens.INK_SOFT, 0xFF04120C, 0xFF020806}));
+
+        int listW = Math.round(dm.widthPixels * 0.44f), margin = dp(28);
+        int previewW = dm.widthPixels - listW - 2 * margin, previewH = previewW * 9 / 16;
+        LinearLayout left = new LinearLayout(this);
+        left.setOrientation(LinearLayout.VERTICAL);
+        left.setGravity(Gravity.CENTER_VERTICAL);
+        left.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        TextView cap = new TextView(this);
+        cap.setText("معاينة مباشرة");
+        cap.setTextColor(Tokens.GOLD_DEEP);
+        cap.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        cap.setTypeface(font("Thmanyah-Medium"));
+        cap.setPadding(0, 0, 0, dp(10));
+        left.addView(cap);
+        android.widget.FrameLayout clip = new android.widget.FrameLayout(this);
+        clip.setClipChildren(true);
+        android.graphics.drawable.GradientDrawable clipBg = new android.graphics.drawable.GradientDrawable();
+        clipBg.setCornerRadius(dp(Tokens.RADIUS_CARD));
+        clipBg.setColor(Tokens.INK);
+        clip.setBackground(clipBg);
+        clip.setClipToOutline(true);
+        // Laid out at the TV's full size and scaled down, so it shows what the screen really shows.
+        preview = ScreenView.create(this);
+        preview.setPivotX(0);
+        preview.setPivotY(0);
+        preview.setScaleX(previewW / (float) dm.widthPixels);
+        preview.setScaleY(previewW / (float) dm.widthPixels);
+        clip.addView(preview, new android.widget.FrameLayout.LayoutParams(dm.widthPixels, dm.heightPixels));
+        left.addView(clip, new LinearLayout.LayoutParams(previewW, previewH));
+        previewUrl = new Prefs(this).dashboardUrl(this);
+        LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(previewW, -1);
+        leftLp.setMargins(margin, 0, margin, 0);
+        panes.addView(left, leftLp);
+
         ScrollView scroll = new ScrollView(this);
-        scroll.setBackground(new android.graphics.drawable.GradientDrawable(
-            android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, new int[]{0xFF0A2016, 0xFF04120C, 0xFF020806}));
         scroll.setVerticalScrollBarEnabled(false);
-        android.widget.FrameLayout frame = new android.widget.FrameLayout(this);
         list = new LinearLayout(this);
         list.setOrientation(LinearLayout.VERTICAL);
         list.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        list.setPadding(dp(8), dp(36), dp(8), dp(48));
-        int width = Math.min(getResources().getDisplayMetrics().widthPixels - dp(64), dp(860));
-        frame.addView(list, new android.widget.FrameLayout.LayoutParams(width, -2, Gravity.CENTER_HORIZONTAL));
-        scroll.addView(frame);
-        setContentView(scroll);
+        list.setPadding(dp(8), dp(30), dp(28), dp(48));
+        scroll.addView(list);
+        panes.addView(scroll, new LinearLayout.LayoutParams(listW, -1));
+        setContentView(panes);
         render();
+    }
+
+    /** A changed setting: the preview reloads with it. The page reads its settings once, at load. */
+    private void syncPreview() {
+        if (preview == null) return;
+        String url = prefs.dashboardUrl(this);
+        if (url.equals(previewUrl)) return;
+        previewUrl = url;
+        preview.evaluateJavascript("location.replace(" + JSONObject.quote(url) + ");location.reload();", null);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (preview != null) preview.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (preview != null) { preview.destroy(); preview = null; }
+        super.onDestroy();
     }
 
     @Override
     protected void onResume() {   // back in front (from the TV's settings, or opened again over itself): show what is set now
         super.onResume();
+        if (preview != null) preview.onResume();
         render();
     }
 
     private void render() {
+        syncPreview();
         list.removeAllViews();
         TextView title = new TextView(this);
         title.setText("تلفزيونك");
-        title.setTextColor(0xFFF6EFE0);
+        title.setTextColor(Tokens.SAND);
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
         title.setTypeface(font("ThmanyahDisplay-Bold"));
         list.addView(title);
         TextView sub = new TextView(this);
         sub.setText("إعدادات شاشة التوقف");
-        sub.setTextColor(0xFFC6BBA4);
+        sub.setTextColor(Tokens.SOFT);
         sub.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         sub.setTypeface(font("Thmanyah-Regular"));
         sub.setPadding(0, 0, 0, dp(18));
@@ -97,8 +159,12 @@ public class SettingsActivity extends Activity {
         row("الفرق المتابعة (" + arabicNum(prefs.teams().size()) + "/" + arabicNum(Prefs.MAX_TEAMS) + ")", teamsLabel(),
             R.drawable.ic_trophy, new Runnable() { public void run() { manageTeams(); } });
 
-        header("بجانب الساعة");
-        row("المحتوى", Prefs.panelLabel(prefs.panel()), R.drawable.ic_eye, new Runnable() { public void run() { pickPanel(false); } });
+        header("شاشة التوقف");
+        row("المشاهد", sceneLabels(), R.drawable.ic_screensaver, new Runnable() { public void run() { pickScenes(); } });
+        row("مدة كل مشهد", TextUtilsAr.digits(prefs.sceneMinutes()) + " دقائق", R.drawable.ic_sync, new Runnable() { public void run() { pickSceneMinutes(); } });
+        row("لحظة الأذان", prefs.moment() ? "تظهر الصلاة وحدها حتى الإقامة" : "متوقفة", R.drawable.ic_eye,
+            new Runnable() { public void run() { prefs.setMoment(!prefs.moment()); render(); } });
+        row("بجانب الساعة", Prefs.panelLabel(prefs.panel()), R.drawable.ic_eye, new Runnable() { public void run() { pickPanel(false); } });
 
         header("الشاشة الرئيسية (تلفزيونك)");
         row("بطاقة على الشاشة الرئيسية", Prefs.panelLabel(prefs.homePanel()), R.drawable.ic_eye,
@@ -369,20 +435,136 @@ public class SettingsActivity extends Activity {
 
     /** The card beside the screensaver's clock, or (home) the one on the launcher's home screen. */
     private void pickPanel(final boolean home) {
-        String[] labels = new String[Prefs.PANELS.length];
-        String current = home ? prefs.homePanel() : prefs.panel();
+        java.util.Set<String> now = new java.util.HashSet<>();
+        now.add(home ? prefs.homePanel() : prefs.panel());
+        pickPictures(home ? "بطاقة على الشاشة الرئيسية" : "بجانب الساعة", Prefs.PANELS, "thumb_panel_", now, false, chosen -> {
+            String v = chosen.iterator().next();
+            if (home) prefs.setHomePanel(v); else prefs.setPanel(v);
+            render();
+        });
+    }
+
+    private String sceneLabels() {
+        StringBuilder b = new StringBuilder();
+        for (String[] s : Prefs.SCENES) if (prefs.scenes().contains(s[0])) {
+            if (b.length() > 0) b.append("، ");
+            b.append(s[1].split(":")[0]);
+        }
+        return b.toString();
+    }
+
+    private void pickScenes() {
+        pickPictures("المشاهد: اختر مشهداً أو أكثر", Prefs.SCENES, "thumb_scene_", new java.util.HashSet<>(prefs.scenes()), true, chosen -> {
+            List<String> v = new ArrayList<>();
+            for (String[] s : Prefs.SCENES) if (chosen.contains(s[0])) v.add(s[0]);   // always in the same order
+            prefs.setScenes(v);
+            render();
+        });
+    }
+
+    private void pickSceneMinutes() {
+        String[] labels = new String[Prefs.SCENE_MINUTES.length];
         int sel = 0;
         for (int i = 0; i < labels.length; i++) {
-            labels[i] = Prefs.PANELS[i][1];
-            if (Prefs.PANELS[i][0].equals(current)) sel = i;
+            labels[i] = TextUtilsAr.digits(Prefs.SCENE_MINUTES[i]) + " دقائق";
+            if (Prefs.SCENE_MINUTES[i].equals(prefs.sceneMinutes())) sel = i;
         }
-        new AlertDialog.Builder(this, DIALOG_THEME).setTitle(home ? "بطاقة على الشاشة الرئيسية" : "بجانب الساعة")
+        new AlertDialog.Builder(this, DIALOG_THEME).setTitle("مدة كل مشهد")
             .setSingleChoiceItems(labels, sel, (d, i) -> {
-                if (home) prefs.setHomePanel(Prefs.PANELS[i][0]); else prefs.setPanel(Prefs.PANELS[i][0]);
+                prefs.setSceneMinutes(Prefs.SCENE_MINUTES[i]);
                 d.dismiss();
                 render();
-            })
-            .show();
+            }).show();
+    }
+
+    interface Picked { void got(java.util.Set<String> chosen); }
+
+    /** A grid of pictures of the real screen: one choice closes it; several need «تم», and at least one stays on. */
+    private void pickPictures(String title, String[][] items, String prefix, final java.util.Set<String> selected,
+                              final boolean many, final Picked then) {
+        ScrollView scroll = new ScrollView(this);
+        LinearLayout rows = new LinearLayout(this);
+        rows.setOrientation(LinearLayout.VERTICAL);
+        rows.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        rows.setPadding(dp(16), dp(8), dp(16), dp(8));
+        scroll.addView(rows);
+        final AlertDialog[] dialog = new AlertDialog[1];
+        View first = null;
+        LinearLayout row = null;
+        for (int i = 0; i < items.length; i++) {
+            if (i % 3 == 0) {
+                row = new LinearLayout(this);
+                row.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                rows.addView(row);
+            }
+            final String value = items[i][0];
+            View cell = pictureCell(items[i][1], getResources().getIdentifier(prefix + value, "drawable", getPackageName()),
+                selected, value, many, () -> {
+                    if (many) return;
+                    selected.clear();
+                    selected.add(value);
+                    dialog[0].dismiss();
+                    then.got(selected);
+                });
+            row.addView(cell);
+            if (first == null || selected.contains(value) && !selected.contains(String.valueOf(first.getTag()))) first = cell;
+        }
+        AlertDialog.Builder b = new AlertDialog.Builder(this, DIALOG_THEME).setTitle(title).setView(scroll);
+        if (many) b.setPositiveButton("تم", (d, w) -> {
+            if (selected.isEmpty()) { toast("اختر مشهداً واحداً على الأقل"); return; }
+            then.got(selected);
+        });
+        dialog[0] = b.show();
+        if (dialog[0].getWindow() != null) dialog[0].getWindow().setLayout(dp(800), -2);
+        if (first != null) first.requestFocus();
+    }
+
+    private View pictureCell(String label, int image, final java.util.Set<String> selected, final String value,
+                             final boolean many, final Runnable onPick) {
+        final LinearLayout cell = new LinearLayout(this);
+        cell.setTag(value);
+        cell.setOrientation(LinearLayout.VERTICAL);
+        cell.setFocusable(true);
+        cell.setClickable(true);
+        cell.setPadding(dp(6), dp(6), dp(6), dp(8));
+        final android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+        bg.setCornerRadius(dp(Tokens.RADIUS_CARD));
+        bg.setStroke(dp(3), 0x00000000);
+        cell.setBackground(bg);
+        android.widget.ImageView img = new android.widget.ImageView(this);
+        img.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+        if (image != 0) img.setImageResource(image);
+        cell.addView(img, new LinearLayout.LayoutParams(dp(232), dp(130)));
+        final TextView name = new TextView(this);
+        name.setTextColor(Tokens.SAND);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        name.setTypeface(font("Thmanyah-Medium"));
+        name.setPadding(dp(4), dp(6), dp(4), 0);
+        name.setMaxLines(2);
+        cell.addView(name);
+        final Runnable paint = () -> {
+            name.setText((selected.contains(value) ? "✓  " : "") + label);
+            name.setTextColor(selected.contains(value) ? Tokens.GOLD_LIGHT : Tokens.SAND);
+        };
+        paint.run();
+        cell.setOnFocusChangeListener((v, has) -> bg.setStroke(dp(3), has ? Tokens.GOLD_DEEP : 0x00000000));
+        cell.setOnClickListener(v -> {
+            if (many) {
+                if (!selected.remove(value)) selected.add(value);
+                paint.run();
+            }
+            onPick.run();
+        });
+        return cell;
+    }
+
+    /** Arabic digits for a plain number. */
+    private static final class TextUtilsAr {
+        static String digits(String s) {
+            StringBuilder b = new StringBuilder(s.length());
+            for (char c : s.toCharArray()) b.append(c >= '0' && c <= '9' ? (char) ('٠' + (c - '0')) : c);
+            return b.toString();
+        }
     }
 
     private void pickRating() {
@@ -531,7 +713,7 @@ public class SettingsActivity extends Activity {
     private void header(String text) {
         TextView t = new TextView(this);
         t.setText(text);
-        t.setTextColor(0xFFD6AF6B);
+        t.setTextColor(Tokens.GOLD_DEEP);
         t.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         t.setTypeface(font("Thmanyah-Medium"));
         t.setLetterSpacing(0.05f);
@@ -549,14 +731,14 @@ public class SettingsActivity extends Activity {
         card.setFocusable(true);
         card.setClickable(true);
         final android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
-        bg.setCornerRadius(dp(14));
+        bg.setCornerRadius(dp(Tokens.RADIUS_ROW));
         bg.setColor(0x14FFFFFF);
         bg.setStroke(dp(2), 0x1FD6AF6B);
         card.setBackground(bg);
 
         final android.widget.ImageView ic = new android.widget.ImageView(this);
         final android.graphics.drawable.Drawable d = getDrawable(icon).mutate();
-        d.setTint(0xFFD6AF6B);
+        d.setTint(Tokens.GOLD_DEEP);
         ic.setImageDrawable(d);
         card.addView(ic, new LinearLayout.LayoutParams(dp(24), dp(24)));
 
@@ -564,7 +746,7 @@ public class SettingsActivity extends Activity {
         texts.setOrientation(LinearLayout.VERTICAL);
         final TextView name = new TextView(this);
         name.setText(label);
-        name.setTextColor(0xFFF6EFE0);
+        name.setTextColor(Tokens.SAND);
         name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         name.setTypeface(font("Thmanyah-Medium"));
         name.setSingleLine(true);
@@ -572,7 +754,7 @@ public class SettingsActivity extends Activity {
         final TextView val = new TextView(this);
         if (value != null) {
             val.setText(value);
-            val.setTextColor(0xFFC6BBA4);
+            val.setTextColor(Tokens.SOFT);
             val.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
             val.setTypeface(font("Thmanyah-Regular"));
             val.setSingleLine(true);
@@ -593,8 +775,8 @@ public class SettingsActivity extends Activity {
         card.setOnFocusChangeListener((v, has) -> {
             // No scaling: a scaled rounded card overlapped its neighbours and blurred the text.
             bg.setColor(has ? 0x33D6AF6B : 0x14FFFFFF);
-            bg.setStroke(dp(2), has ? 0xFFD6AF6B : 0x1FD6AF6B);
-            chevron.setTextColor(has ? 0xFFD6AF6B : 0x99C6BBA4);
+            bg.setStroke(dp(2), has ? Tokens.GOLD_DEEP : 0x1FD6AF6B);
+            chevron.setTextColor(has ? Tokens.GOLD_DEEP : 0x99C6BBA4);
         });
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
         lp.bottomMargin = dp(8);

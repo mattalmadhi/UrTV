@@ -5,7 +5,9 @@
     "brightness": 0.88,
     "region": "riyadh",
     "place": "برج المملكة، الرياض",
-    "time": "golden"
+    "time": "golden",
+    "side": "",
+    "lum": 0.54
   },
   {
     "file": "_ABfNIGGsZk.jpg",
@@ -13,7 +15,9 @@
     "brightness": 0.95,
     "region": "makkah",
     "place": "المسجد العائم، جدة",
-    "time": "day"
+    "time": "day",
+    "side": "l",
+    "lum": 0.67
   },
   {
     "file": "tqQ-L3jHyeg.jpg",
@@ -21,7 +25,9 @@
     "brightness": 0.95,
     "region": "madinah",
     "place": "العُلا",
-    "time": "golden"
+    "time": "golden",
+    "side": "",
+    "lum": 0.55
   },
   {
     "file": "wm-19603ce18a.jpg",
@@ -29,7 +35,9 @@
     "brightness": 0.95,
     "region": "qassim",
     "place": "قصر المشقوق، الرس",
-    "time": "day"
+    "time": "day",
+    "side": "",
+    "lum": 0.74
   },
   {
     "file": "mRbAyH6DEcs.jpg",
@@ -37,7 +45,9 @@
     "brightness": 0.95,
     "region": "eastern",
     "place": "كورنيش الخبر",
-    "time": "golden"
+    "time": "golden",
+    "side": "l",
+    "lum": 0.71
   },
   {
     "file": "wm-0318d05d70.jpg",
@@ -45,7 +55,9 @@
     "brightness": 0.95,
     "region": "asir",
     "place": "رجال ألمع",
-    "time": "day"
+    "time": "day",
+    "side": "",
+    "lum": 0.49
   },
   {
     "file": "XDtzu1D2P8c.jpg",
@@ -53,7 +65,9 @@
     "brightness": 0.84,
     "region": "tabuk",
     "place": "نيوم",
-    "time": "golden"
+    "time": "golden",
+    "side": "",
+    "lum": 0.59
   },
   {
     "file": "wm-22bd138dd9.jpg",
@@ -61,7 +75,9 @@
     "brightness": 0.95,
     "region": "hail",
     "place": "جبال المسمى، حائل",
-    "time": "golden"
+    "time": "golden",
+    "side": "",
+    "lum": 0.41
   },
   {
     "file": "wm-15f0449ad6.jpg",
@@ -69,7 +85,9 @@
     "brightness": 0.95,
     "region": "northern",
     "place": "عرعر",
-    "time": "day"
+    "time": "day",
+    "side": "",
+    "lum": 0.61
   },
   {
     "file": "88qmDe0r30w.jpg",
@@ -77,7 +95,9 @@
     "brightness": 0.95,
     "region": "jazan",
     "place": "جزر فرسان",
-    "time": "day"
+    "time": "day",
+    "side": "",
+    "lum": 0.35
   },
   {
     "file": "wm-3681a9a8bb.jpg",
@@ -85,7 +105,9 @@
     "brightness": 0.95,
     "region": "najran",
     "place": "قصر الإمارة، نجران",
-    "time": "day"
+    "time": "day",
+    "side": "",
+    "lum": 0.62
   },
   {
     "file": "wm-f56f6b9c5c.jpg",
@@ -93,7 +115,9 @@
     "brightness": 0.95,
     "region": "baha",
     "place": "قرية ذي عين",
-    "time": "golden"
+    "time": "golden",
+    "side": "",
+    "lum": 0.56
   },
   {
     "file": "wm-7a6a3ea0ef.jpg",
@@ -101,6 +125,8 @@
     "brightness": 0.95,
     "region": "jouf",
     "place": "قلعة مارد",
-    "time": "day"
+    "time": "day",
+    "side": "",
+    "lum": 0.62
   }
 ]

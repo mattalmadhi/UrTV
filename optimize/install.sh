@@ -101,6 +101,7 @@ if [ "$what" = launcher ] || [ "$what" = all ]; then
   # 1. The new home must be installed and working BEFORE anything is disabled.
   push_install urtv-home.apk sa.urtv.home
   "$PY" -I optimize/tv.py "pm grant sa.urtv.home android.permission.ACCESS_FINE_LOCATION" || true
+  "$PY" -I optimize/tv.py "appops set sa.urtv.home GET_USAGE_STATS allow" || true   # recently used apps first
 
   # Steps 2-4 as one function, so an ADB drop in the middle (TCL G08: Wi-Fi fell during the batch) can be retried.
   # "verify" as $1: only step 4 (the switch is armed already and the batch may have run).

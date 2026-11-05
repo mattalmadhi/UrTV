@@ -15,6 +15,9 @@
 #                                                  French Hindi German  ("" = all)
 #   optimize/saver.sh minrating 7                  episodes card: lowest rating shown: 0 6 6.5 7 7.5 8
 #   optimize/saver.sh photos 15                    change the photo every N minutes: 5 10 15 30 60 (default 30)
+#   optimize/saver.sh scenes calm,faith,info       the screensaver's scenes, in turn: calm faith info
+#   optimize/saver.sh scene-min 3                  minutes per scene: 2 3 5 10
+#   optimize/saver.sh moment 1                     at the adhan only the prayer on screen: 1 on, 0 off
 #   optimize/saver.sh idle 10                      the TV starts the screensaver after N idle minutes: 1 2 5 10 15 30
 #                                                  (the TV's own timer; left alone unless you run this)
 #   optimize/saver.sh update                       download the latest screen now
@@ -51,6 +54,9 @@ case "${1:-}" in
   genres)    send SET "--es genres $(quote "${2-}")" ;;
   langs)     send SET "--es langs $(quote "${2-}")" ;;
   minrating) send SET "--es minrating $(quote "${2:?usage: optimize/saver.sh minrating 7}")" ;;
+  scenes)    send SET "--es scenes $(quote "${2:?usage: optimize/saver.sh scenes calm,faith,info}")" ;;
+  scene-min) send SET "--es scene_min $(quote "${2:?usage: optimize/saver.sh scene-min 3}")" ;;
+  moment)    send SET "--es moment $(quote "${2:?usage: optimize/saver.sh moment 1}")" ;;
   photos)    send SET "--es photos $(quote "${2:?usage: optimize/saver.sh photos 15}")" ;;
   idle)
     # the app may change the TV's timer only if the owner allowed it; the shell always may

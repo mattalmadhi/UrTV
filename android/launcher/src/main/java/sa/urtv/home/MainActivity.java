@@ -95,6 +95,7 @@ public class MainActivity extends Activity {
     private final Runnable rotateWallpaper = this::nextWallpaper;
     static final long WALLPAPER_INTERVAL_MS = 10 * 60 * 1000;
     private TextView greeting, clock, ampm, date, title, wifiPill, appsLabel;
+    private GradientDrawable titleBg;
     private int glowColor = 0xFF3A3A3A;
     private ValueAnimator glowAnim;
     private int lastFocusedId = View.NO_ID;
@@ -102,9 +103,12 @@ public class MainActivity extends Activity {
     private int packageSeq;
     private PopupWindow inputsPopup;
     private HomeCard homeCard;
+    private TodayRow today;
+    private View pillsBar;
+    private String lastFocusedPkg, usageOrder = "";
 
     private final BroadcastReceiver tick = new BroadcastReceiver() {
-        @Override public void onReceive(Context c, Intent i) { updateClock(); updateWifi(); }
+        @Override public void onReceive(Context c, Intent i) { updateClock(); updateWifi(); today.tick(); }
     };
     private final BroadcastReceiver packages = new BroadcastReceiver() {
         @Override public void onReceive(Context c, Intent i) { buildApps(); }
@@ -149,11 +153,13 @@ public class MainActivity extends Activity {
         updateClock();
         updateWifi();
         homeCard.refresh();
+        today.refresh();
         View last = lastFocusedId == View.NO_ID ? null : findViewById(lastFocusedId);
         if (last == null && !dockCards.isEmpty()) last = dockCards.get(0);
         if (last != null) last.requestFocus();
         // Catch installs/removals that happened while another app was in front.
-        if (getPackageManager().getChangedPackages(packageSeq) != null) buildApps();
+        // ... and the grid follows what was used since (an app used from here moves to the front).
+        if (getPackageManager().getChangedPackages(packageSeq) != null || !usageKey().equals(usageOrder)) buildApps();
         if (firstShow) { firstShow = false; playEntrance(); }
         // New photo on return if the current one has been up for the full interval.
         if (wallIndex < 0 || SystemClock.elapsedRealtime() - wallChangedAt >= WALLPAPER_INTERVAL_MS) nextWallpaper();
@@ -206,7 +212,7 @@ public class MainActivity extends Activity {
         // Scrim: darker at the top (clock, pills) and bottom (dock) so text stays readable.
         View scrim = new View(this);
         scrim.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{0xB3000000, 0x40000000, 0x26000000, 0x8C000000, 0xE6000000}));
+                new int[]{0xCC000000, 0x73000000, 0x59000000, 0xA6000000, 0xF0000000}));
         root.addView(scrim, new FrameLayout.LayoutParams(-1, -1));
         gridShade = new View(this);
         gridShade.setBackgroundColor(0xB3000000);
@@ -248,11 +254,19 @@ public class MainActivity extends Activity {
         bottom.setClipToPadding(false);
         hero.addView(bottom, lp(-1, -2, Gravity.BOTTOM, dp(48), 0, dp(48), dp(30)));
 
-        title = text(34, "sans-serif-light", Color.WHITE);
-        title.setShadowLayer(dp(18), 0, 0, 0x66000000);
+        today = new TodayRow(this, prefs(), this::font, getResources().getDisplayMetrics().density);
+        bottom.addView(today.view(), llp(-1, dp(66), 0, 0, 0, dp(12)));
+
+        // The focused app's name on a panel tinted with the app's colour, so it reads over any photo.
+        title = text(24, "display", Color.WHITE);
         title.setSingleLine(true);
+        title.setPadding(dp(18), dp(4), dp(18), dp(6));
+        titleBg = new GradientDrawable();
+        titleBg.setCornerRadius(dp(Tokens.RADIUS_CARD));
+        titleBg.setColor(0xB3000000);
+        title.setBackground(titleBg);
         bottom.addView(title, new LinearLayout.LayoutParams(-2, -2));
-        ((LinearLayout.LayoutParams) title.getLayoutParams()).setMargins(dp(8), 0, 0, dp(14));
+        ((LinearLayout.LayoutParams) title.getLayoutParams()).setMargins(dp(5), 0, 0, dp(12));
 
         dockRow = new LinearLayout(this);
         dockRow.setOrientation(LinearLayout.HORIZONTAL);
@@ -294,14 +308,14 @@ public class MainActivity extends Activity {
         LinearLayout clockRow = new LinearLayout(this);
         clockRow.setGravity(Gravity.BOTTOM);
         clockRow.setGravity(Gravity.TOP);
-        clock = text(58, "display", 0xFFFFFDF6);
+        clock = text(58, "display", Tokens.CREAM);
         clock.setIncludeFontPadding(false);
         ampm = text(16, "medium", GOLD);
         clockRow.addView(ampm, llp(-2, -2, 0, dp(6), dp(8), 0));
         clockRow.addView(clock);
         left.addView(clockRow, llp(-2, -2, 0, dp(-2), 0, 0));
 
-        date = text(14, "regular", 0xFFC6BBA4);
+        date = text(14, "regular", Tokens.SOFT);
         date.setSingleLine(true);
         left.addView(date, llp(-2, -2, 0, dp(-6), dp(4), 0));   // the display font leaves a deep gap under its digits
         for (TextView t : new TextView[]{greeting, clock, ampm, date}) t.setShadowLayer(dp(3), 0, dp(1), 0x80000000);
@@ -326,6 +340,8 @@ public class MainActivity extends Activity {
             pills.add(p);
         }
         header.addView(right, new FrameLayout.LayoutParams(-2, -2, Gravity.LEFT | Gravity.TOP));
+        pillsBar = right;
+        pillsBar.setAlpha(0f);   // out of the way until Up from the dock
         return header;
     }
 
@@ -353,7 +369,7 @@ public class MainActivity extends Activity {
             ic.setTint(has ? 0xFF111111 : 0xE6FFFFFF);
             v.animate().scaleX(has ? 1.08f : 1f).scaleY(has ? 1.08f : 1f)
                     .setInterpolator(new OvershootInterpolator(2f)).setDuration(220).start();
-            if (has) { lastFocusedId = v.getId(); scroll.smoothScrollTo(0, 0); fadeGlow(1f); }
+            if (has) { lastFocusedId = v.getId(); lastFocusedPkg = null; scroll.smoothScrollTo(0, 0); fadeGlow(1f); pillsBar.animate().alpha(1f).setDuration(180).start(); }
         });
         return p;
     }
@@ -387,6 +403,14 @@ public class MainActivity extends Activity {
         Collections.sort(rest, (x, y) -> x.label.compareToIgnoreCase(y.label));
         // Fewer than MIN_DOCK of the chosen apps installed: top the dock up from the rest.
         while (dock.size() < MIN_DOCK && !rest.isEmpty()) dock.add(rest.remove(0));
+        // Recently used first, then A to Z. No usage access (it is granted over ADB): A to Z only.
+        final Map<String, Long> used = lastUsed();
+        Collections.sort(rest, (x, y) -> {
+            long a = used.containsKey(x.pkg) ? used.get(x.pkg) : 0, b = used.containsKey(y.pkg) ? used.get(y.pkg) : 0;
+            return a != b ? Long.compare(b, a) : x.label.compareToIgnoreCase(y.label);
+        });
+        appsLabel.setText(used.isEmpty() ? "كل التطبيقات" : "المستخدمة مؤخراً أولاً");
+        usageOrder = usageKey();
 
         dockRow.removeAllViews();
         grid.removeAllViews();
@@ -422,10 +446,34 @@ public class MainActivity extends Activity {
         appsLabel.setVisibility(rest.isEmpty() ? View.GONE : View.VISIBLE);
         wireFocus();
 
-        if (!dock.isEmpty()) { title.setText(dock.get(0).label); setGlow(dock.get(0).color); }
-        View last = lastFocusedId == View.NO_ID ? null : findViewById(lastFocusedId);
+        if (!dock.isEmpty()) { title.setText(dock.get(0).label); titleBg.setColor(withAlpha(darken(dock.get(0).color, 0.42f), 0.88f)); setGlow(dock.get(0).color); }
+        View last = lastFocusedPkg != null ? cardByPkg.get(lastFocusedPkg)
+                : lastFocusedId == View.NO_ID ? null : findViewById(lastFocusedId);
         if (last != null) last.requestFocus();
         else if (!dockCards.isEmpty()) dockCards.get(0).requestFocus();
+    }
+
+    /** Package -> last time used in the last 30 days; empty without usage access. */
+    private Map<String, Long> lastUsed() {
+        Map<String, Long> out = new HashMap<>();
+        try {
+            android.app.usage.UsageStatsManager u = getSystemService(android.app.usage.UsageStatsManager.class);
+            long now = System.currentTimeMillis();
+            Map<String, android.app.usage.UsageStats> all = u.queryAndAggregateUsageStats(now - 30 * 24 * 3600 * 1000L, now);
+            for (Map.Entry<String, android.app.usage.UsageStats> e : all.entrySet())
+                if (e.getValue().getTotalTimeInForeground() > 0) out.put(e.getKey(), e.getValue().getLastTimeUsed());
+        } catch (RuntimeException ignored) { }
+        out.remove(getPackageName());
+        return out;
+    }
+
+    /** What the grid's order depends on: the used apps, most recent first. */
+    private String usageKey() {
+        List<Map.Entry<String, Long>> l = new ArrayList<>(lastUsed().entrySet());
+        Collections.sort(l, (x, y) -> Long.compare(y.getValue(), x.getValue()));
+        StringBuilder b = new StringBuilder();
+        for (Map.Entry<String, Long> e : l) b.append(e.getKey()).append(',');
+        return b.toString();
     }
 
     /** A 16:9 card with the app's banner; the name shows under it while focused. */
@@ -443,7 +491,7 @@ public class MainActivity extends Activity {
         card.setClipToOutline(true);
         card.setOutlineProvider(new ViewOutlineProvider() {
             @Override public void getOutline(View v, Outline o) {
-                o.setRoundRect(0, 0, v.getWidth(), v.getHeight(), dp(10));
+                o.setRoundRect(0, 0, v.getWidth(), v.getHeight(), dp(Tokens.RADIUS_TILE));
             }
         });
         GradientDrawable bg = new GradientDrawable();
@@ -461,10 +509,18 @@ public class MainActivity extends Activity {
             img.setPadding(dp(22), dp(14), dp(22), dp(14));
         }
 
+        // The same thin frame on every banner, whatever its colours.
+        GradientDrawable frame = new GradientDrawable();
+        frame.setCornerRadius(dp(Tokens.RADIUS_TILE));
+        frame.setStroke(dp(1), 0x33FFFFFF);
+        View frameView = new View(this);
+        frameView.setBackground(frame);
+        card.addView(frameView, new FrameLayout.LayoutParams(-1, -1));
+
         // Focus ring and sheen, drawn above the art.
         GradientDrawable ring = new GradientDrawable();
-        ring.setCornerRadius(dp(10));
-        ring.setStroke(dp(2), 0xE6FFFFFF);
+        ring.setCornerRadius(dp(Tokens.RADIUS_TILE));
+        ring.setStroke(dp(3), Tokens.GOLD_LIGHT);
         ring.setOrientation(GradientDrawable.Orientation.TL_BR);
         ring.setColors(new int[]{0x26FFFFFF, 0x00FFFFFF, 0x00FFFFFF});
         View shine = new View(this);
@@ -486,16 +542,19 @@ public class MainActivity extends Activity {
                 .setComponent(app.component)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)));
         card.setOnFocusChangeListener((v, has) -> {
-            float s = has ? (inDock ? 1.12f : 1.1f) : 1f;
+            float s = has ? 1.08f : 1f;
             v.animate().scaleX(s).scaleY(s).translationZ(has ? dp(14) : 0)
-                    .setInterpolator(has ? new OvershootInterpolator(1.8f) : new DecelerateInterpolator())
-                    .setDuration(has ? 320 : 200).start();
+                    .setInterpolator(has ? new OvershootInterpolator(1.2f) : new DecelerateInterpolator())
+                    .setDuration(has ? 260 : 180).start();
             shine.animate().alpha(has ? 1f : 0f).setDuration(160).start();
             label.animate().alpha(has ? 1f : 0f).translationY(has ? dp(4) : 0).setDuration(200).start();
             if (!has) return;
             lastFocusedId = v.getId();
+            lastFocusedPkg = app.pkg;
+            pillsBar.animate().alpha(0f).setDuration(180).start();
             if (inDock) {
                 title.setText(app.label);
+                titleBg.setColor(withAlpha(darken(app.color, 0.42f), 0.88f));
                 title.animate().alpha(1f).setDuration(200).start();
                 animateGlow(app.color);
                 fadeGlow(1f);
@@ -1038,6 +1097,8 @@ public class MainActivity extends Activity {
         header.animate().alpha(1f).translationY(0).setDuration(500).setStartDelay(80).start();
         title.setAlpha(0f);
         title.animate().alpha(1f).setDuration(500).setStartDelay(200).start();
+        today.view().setAlpha(0f);
+        today.view().animate().alpha(1f).setDuration(500).setStartDelay(120).start();
         for (int i = 0; i < dockRow.getChildCount(); i++) {
             View t = dockRow.getChildAt(i);
             t.setAlpha(0f);
@@ -1075,7 +1136,7 @@ public class MainActivity extends Activity {
         if (i != null) launch(i);
     }
 
-    static final int GOLD = 0xFFD6AF6B;
+    static final int GOLD = Tokens.GOLD_DEEP;
     static final String SAVER_PKG = "sa.urtv.screensaver";
     private final Map<String, Typeface> fonts = new HashMap<>();
 
