@@ -275,6 +275,18 @@
     vertical-align:.05em;animation:livePulse 2s ease-in-out infinite}
   @keyframes livePulse{0%,100%{opacity:1}50%{opacity:.25}}
 
+  /* a league's round beside the clock: home, time or score, away */
+  .week li.rnd{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:.4em;padding:.65vh 0}
+  .rn{display:flex;align-items:center;gap:.4em;min-width:0}
+  .rn:last-child{flex-direction:row-reverse}
+  .rn .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-bottom:.25em;margin-bottom:-.25em}
+  .rn .badge{width:1.35em;height:1.35em}
+  .rn.lose{opacity:.7}
+  .rm{display:flex;flex-direction:column;align-items:center;min-width:4.2em;line-height:1.25;font-variant-numeric:tabular-nums}
+  .rv{color:var(--gold-light);white-space:nowrap}
+  .rv b{color:#FFFCF2;font-weight:500}
+  .rw{font-size:.68em;color:var(--dim);white-space:nowrap}
+
   /* match day: the card beside the clock becomes the match */
   .week li.stage-match{display:block;border-bottom:none;padding:1.2vh 0 .4vh;white-space:normal}
   .week li.stage-match + li.stage-match{border-top:1px solid rgba(220,184,111,.13);padding-top:1.6vh}
@@ -443,6 +455,8 @@ const CONFIG = {
   latitude: _num('lat', 24.7136),
   longitude: _num('lon', 46.6753),
   timezone: _Q.get('tz') || 'Asia/Riyadh',
+  // #leagues=4328,...: followed leagues (TheSportsDB ids), beside the followed teams
+  leagues: _list('leagues').filter(x => /^\d+$/.test(x)).slice(0, 3),
   // #scenes=calm,faith,info: one at a time, sceneMin minutes each (no list: everything at once, as older links expect)
   scenes: _list('scenes').filter(s => ['calm','faith','info'].includes(s)),
   sceneMin: (m => [2,3,5,10].includes(m) ? m : 3)(_num('scenemin', 3)),
@@ -457,7 +471,7 @@ const CONFIG = {
     .map(x=>(x||'').trim()).filter(x=>/^\d+$/.test(x)).slice(0, 10),
   sportsKey: '123',
   // the card beside the clock: shows | prayers | forecast | matches | verse | none (#week=0 from older builds = none)
-  panel: (p => ['shows','prayers','forecast','matches','verse','adhkar','none'].includes(p) ? p : 'verse')
+  panel: (p => ['shows','prayers','forecast','matches','round','verse','adhkar','none'].includes(p) ? p : 'verse')
          (_Q.get('panel') || (_Q.get('week') === '0' ? 'none' : 'verse')),
   matchesPerPage: 1,   // one at a time: room for both badges and full names
   matchPageMs: 15000,
@@ -894,7 +908,9 @@ function badgeFor(id, url){
   if(!id) return {u: url || ''};
   const b = BADGES[id] || (BADGES[id] = {});
   if(url && !b.u){ b.u = url; saveBadges(); }
-  if((!b.at || Date.now() - b.at > 7 * 864e5) && !BADGE_PENDING.has(id)) lookupTeam(id);
+  const followed = CONFIG.teamIds.includes(id);
+  if((followed || !b.u) && (!b.at || Date.now() - b.at > 7 * 864e5) && !BADGE_PENDING.has(id)) lookupTeam(id);
+  else if(!followed && b.u && !b.img && !b.tried) queueBadge(id);
   return b;
 }
 async function lookupTeam(id){
@@ -925,6 +941,12 @@ async function cacheBadge(id){
     b.img = await new Promise((ok, no) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = no; fr.readAsDataURL(blob); });
     saveBadges();
   }catch(e){}
+}
+// a league's clubs: one at a time, so a whole round does not hit the service at once, and kept on the device
+let BADGE_QUEUE = Promise.resolve();
+function queueBadge(id){
+  BADGES[id].tried = Date.now();
+  BADGE_QUEUE = BADGE_QUEUE.then(() => cacheBadge(id)).then(() => new Promise(r => setTimeout(r, 400)));
 }
 function badgeFail(img){
   const full = img.dataset.full;
@@ -960,6 +982,9 @@ function kickoff12(ev){
 
 function matchSlot(id, now, shown){
   const done = resultsFor(id).filter(ev => finishedRecently(ev, now)).sort((a,b)=>toDate(b)-toDate(a))[0];
+  return eventBlock(done, MATCHES[id], now, shown);
+}
+function eventBlock(done, ev, now, shown){
   if(done){
     if(shown.has(done.idEvent)) return '';          // both teams in the same game
     shown.add(done.idEvent);
@@ -971,7 +996,6 @@ function matchSlot(id, now, shown){
       + sideHTML(teamAr(done.strAwayTeam, done.idAwayTeam), done.idAwayTeam, done.strAwayTeamBadge, as > hs ? 'win' : as < hs ? 'lose' : '')
       + `</span></div><div class="sub">النتيجة النهائية · ${day}</div></div>`;
   }
-  const ev = MATCHES[id];
   if(!ev || shown.has(ev.idEvent)) return '';
   const d = toDate(ev), diff = d - now;
   if(diff < -2.5*3600000 || diff > CONFIG.weekWindowDays * 86400000) return '';   // in progress stays on screen
@@ -986,6 +1010,81 @@ function matchSlot(id, now, shown){
        + mid
        + sideHTML(teamAr(ev.strAwayTeam, ev.idAwayTeam), ev.idAwayTeam, ev.strAwayTeamBadge)
        + `</span></div><div class="sub">${sub}</div></div>`;
+}
+
+// ---------- followed leagues: the current round of each ----------
+// The free service gives one next and one past event, but a whole round: the round comes from those two.
+const LEAGUE_AR = {4328:'الدوري الإنجليزي', 4668:'دوري روشن', 4335:'الدوري الإسباني', 4332:'الدوري الإيطالي',
+  4331:'الدوري الألماني', 4334:'الدوري الفرنسي', 4337:'الدوري الهولندي'};
+let LEAGUE_EVENTS = (()=>{ try{ return JSON.parse(localStorage.getItem('leagueEvents') || '{}'); }catch(e){ return {}; } })();
+let LEAGUE_ROUND = (()=>{ try{ return JSON.parse(localStorage.getItem('leagueRound') || '{}'); }catch(e){ return {}; } })();
+let LEAGUES_AT = 0;
+function leagueEvents(){
+  const seen = new Set(), out = [];
+  CONFIG.leagues.forEach(id => (LEAGUE_EVENTS[id] || []).forEach(ev => {
+    if(ev && ev.idEvent && !seen.has(ev.idEvent)){ seen.add(ev.idEvent); out.push(ev); }
+  }));
+  return out.sort((a, b) => toDate(a) - toDate(b));
+}
+async function sportsGet(path){
+  const r = await fetchT(`https://www.thesportsdb.com/api/v1/json/${CONFIG.sportsKey}/${path}`, 12000);
+  if(!r.ok) throw 0;
+  return r.json();
+}
+const pause = ms => new Promise(r => setTimeout(r, ms));
+async function loadLeagues(){
+  LEAGUES_AT = Date.now();
+  for(const id of CONFIG.leagues){
+    try{
+      const next = ((await sportsGet('eventsnextleague.php?id=' + id)).events || [])[0];
+      await pause(1500);
+      const past = ((await sportsGet('eventspastleague.php?id=' + id)).events || [])[0];
+      await pause(1500);
+      const known = [next, past].filter(Boolean);
+      const round = Math.max(0, ...known.map(e => +e.intRound || 0)), season = (next || past || {}).strSeason;
+      let events = known;
+      if(round && season){
+        const all = (await sportsGet(`eventsround.php?id=${id}&r=${round}&s=${encodeURIComponent(season)}`)).events || [];
+        const have = new Set(all.map(e => e.idEvent));
+        events = all.concat(known.filter(e => !have.has(e.idEvent)));
+        LEAGUE_ROUND[id] = round;
+      }
+      if(events.length) LEAGUE_EVENTS[id] = events;
+    }catch(e){}                                    // offline or refused: what is on screen stays
+    await pause(1500);
+  }
+  try{
+    localStorage.setItem('leagueEvents', JSON.stringify(LEAGUE_EVENTS));
+    localStorage.setItem('leagueRound', JSON.stringify(LEAGUE_ROUND));
+  }catch(e){}
+  renderMatches();
+  if(panelNow() === 'round') renderPanel(false);
+}
+// every 30 minutes, every 10 while one of its games is on (a whole round every 2 minutes is too much for the free key)
+function tickLeagues(){
+  const now = Date.now();
+  const live = leagueEvents().some(ev => { const k = toDate(ev).getTime(); return now >= k && now < k + 2.5 * 36e5 && !FINAL.includes((ev.strStatus || '').toUpperCase()); });
+  if(now - LEAGUES_AT >= (live ? 10 : 30) * 60000) loadLeagues();
+}
+function roundRows(){
+  const now = Date.now();
+  return leagueEvents().filter(ev => { const k = toDate(ev).getTime(); return k - now <= CONFIG.weekWindowDays * 864e5 && k - now >= -3 * 864e5; }).map(ev => {
+    const d = toDate(ev), diff = d - now, scored = ev.intHomeScore != null && ev.intAwayScore != null;
+    const over = finishedRecently(ev, now) || (scored && FINAL.includes((ev.strStatus || '').toUpperCase())), live = diff <= 0 && !over;
+    const hs = +ev.intHomeScore, as = +ev.intAwayScore;
+    const side = (name, id, url, cls) => `<span class="rn${cls}">${badgeHTML(id, url, name)}<span class="nm">${esc(name)}</span></span>`;
+    const day = new Intl.DateTimeFormat(GREG,{timeZone:CONFIG.timezone,weekday:'long'}).format(d);
+    const mid = scored && (over || live) ? `<b>${ar(hs)} - ${ar(as)}</b>` : kickoff12(ev);
+    const sub = live ? '<span class="live-dot"></span><span class="live">مباشر</span>' : over ? 'انتهت' : day;
+    return `<li class="rnd">` + side(teamAr(ev.strHomeTeam, ev.idHomeTeam), ev.idHomeTeam, ev.strHomeTeamBadge, over && hs < as ? ' lose' : '')
+      + `<span class="rm"><span class="rv">${mid}</span><span class="rw">${sub}</span></span>`
+      + side(teamAr(ev.strAwayTeam, ev.idAwayTeam), ev.idAwayTeam, ev.strAwayTeamBadge, over && as < hs ? ' lose' : '') + `</li>`;
+  });
+}
+function roundTitle(){
+  if(CONFIG.leagues.length !== 1) return 'مباريات الجولة';
+  const id = CONFIG.leagues[0], r = LEAGUE_ROUND[id];
+  return (LEAGUE_AR[id] || 'الدوري') + (r ? ' · الجولة ' + ar(r) : '');
 }
 
 // ---------- match day: from 3 hours before a followed team's kick-off to the final whistle ----------
@@ -1060,7 +1159,8 @@ async function loadLive(){
 let MATCH_PAGE = 0;
 function renderMatches(turn){
   const now = Date.now(), shown = new Set();
-  const slots = CONFIG.teamIds.map(id => matchSlot(id, now, shown)).filter(Boolean);
+  const slots = CONFIG.teamIds.map(id => matchSlot(id, now, shown)).concat(
+    leagueEvents().map(ev => finishedRecently(ev, now) ? eventBlock(ev, null, now, shown) : eventBlock(null, ev, now, shown))).filter(Boolean);
   const row = document.getElementById('match-row');
   if(!slots.length){ if(!MATCHES_LOADED && row.firstElementChild) return; row.innerHTML = '<div class="none-week">لا شيء هذا الأسبوع</div>'; return; }
   const per = CONFIG.matchesPerPage, pages = Math.ceil(slots.length / per);
@@ -1255,15 +1355,16 @@ function renderPanel(animate){
   if(P === 'prayers') rows = prayerRows();
   else if(P === 'forecast') rows = forecastRows();
   else if(P === 'matches') rows = matchRows();
+  else if(P === 'round'){ rows = roundRows(); hd.textContent = roundTitle(); }
   else if(P === 'verse'){ const q = quoteOfDay(); hd.textContent = q.title; rows = q.rows; }
   else if(P === 'adhkar'){ const q = dhikrNow(); hd.textContent = q.title; rows = q.rows; }
   if(PANEL_TITLE[P]) hd.textContent = PANEL_TITLE[P];
   if(!rows.length){
     ul.classList.remove('flip');
-    ul.innerHTML = `<li class="empty">${P === 'matches' ? 'لا مباريات هذا الأسبوع' : 'لا تتوفر بيانات الآن'}</li>`;
+    ul.innerHTML = `<li class="empty">${P === 'matches' || P === 'round' ? 'لا مباريات هذا الأسبوع' : 'لا تتوفر بيانات الآن'}</li>`;
     return;
   }
-  if(P === 'matches' && rows.length > WEEK_ROWS){        // page through, like the shows
+  if((P === 'matches' || P === 'round') && rows.length > WEEK_ROWS){        // page through, like the shows
     const start = (LIST_PAGE * WEEK_ROWS) % rows.length;
     rows = Array.from({length: WEEK_ROWS}, (_, i) => rows[(start + i) % rows.length]);
   }
@@ -1697,9 +1798,11 @@ function boot(){
   setInterval(()=>{
     if(panelNow() === 'shows' && WEEK_POOL.length > WEEK_ROWS){ WEEK_PAGE++; renderWeekPage(true); }
     if(panelNow() === 'matches'){ LIST_PAGE++; renderPanel(matchRows().length > WEEK_ROWS); }
+    if(panelNow() === 'round'){ LIST_PAGE++; renderPanel(roundRows().length > WEEK_ROWS); }
   }, 25*1000);
   setInterval(applyNight, 60*1000);
   setInterval(pixelShift, 4*60*1000);
+  if(CONFIG.leagues.length){ setTimeout(loadLeagues, 4000); setInterval(tickLeagues, 60000); }
   if(CONFIG.panel !== 'none') turnDhikr();
   if(CONFIG.panel === 'none') document.documentElement.classList.add('no-card');
   if(CONFIG.scenes.length){ tickScene(); setInterval(tickScene, 20 * 1000); }
@@ -1718,7 +1821,7 @@ function panelNow(){
   if(!SCENE || P === 'none') return P;
   const faith = P === 'verse' || P === 'adhkar';
   if(SCENE === 'faith') return faith ? P : 'adhkar';
-  if(SCENE === 'info') return faith ? 'forecast' : P;
+  if(SCENE === 'info') return faith ? (CONFIG.leagues.length ? 'round' : 'forecast') : P;
   return P;
 }
 function setScene(s){
@@ -1754,10 +1857,12 @@ function bootWidget(){
   else renderPanel(false);
   if(P === 'prayers'){ loadPrayers(); setInterval(loadPrayers, 6*3600*1000); setInterval(() => renderPanel(false), 15000); }
   if(P === 'forecast'){ loadWeather(); setInterval(loadWeather, 30*60*1000); }
+  if(P === 'round'){ loadLeagues(); setInterval(tickLeagues, 60000); }
   if(P === 'matches'){ loadMatches(); setInterval(loadMatches, 30*60*1000); setInterval(loadLive, 2*60000); }
   setInterval(() => {
     if(P === 'shows' && WEEK_POOL.length > WEEK_ROWS){ WEEK_PAGE++; renderWeekPage(true); }
     if(P === 'matches'){ LIST_PAGE++; renderPanel(matchRows().length > WEEK_ROWS); }
+    if(P === 'round'){ LIST_PAGE++; renderPanel(roundRows().length > WEEK_ROWS); }
   }, 25*1000);
   if(P === 'adhkar') turnDhikr();
   let lastDay = riyadhDayNumber();

@@ -39,6 +39,13 @@ final class Prefs {
         {"American Major League Soccer", "الدوري الأمريكي"},
     };
 
+    // Leagues to follow beside the teams: TheSportsDB id (checked against its all_leagues and lookuptable), Arabic label.
+    // The same ids and names are in LEAGUE_AR in src/template.html.
+    static final String[][] FOLLOW_LEAGUES = {
+        {"4328", "الدوري الإنجليزي"}, {"4668", "دوري روشن"}, {"4335", "الدوري الإسباني"}, {"4332", "الدوري الإيطالي"},
+        {"4331", "الدوري الألماني"}, {"4334", "الدوري الفرنسي"}, {"4337", "الدوري الهولندي"},
+    };
+
     // TVMaze genre (sent to the page), Arabic label
     static final String[][] GENRES = {
         {"Drama", "دراما"}, {"Comedy", "كوميديا"}, {"Action", "أكشن"}, {"Crime", "جريمة"},
@@ -114,7 +121,7 @@ final class Prefs {
     // The card beside the clock: value sent to the page (#panel=), Arabic label
     static final String[][] PANELS = {
         {"shows", "جديد المسلسلات"}, {"prayers", "مواقيت الصلاة اليوم"}, {"forecast", "طقس الأيام القادمة"},
-        {"matches", "مباريات فرقك القادمة"}, {"verse", "آية أو حديث اليوم"}, {"adhkar", "أذكار وتسبيح (كل ٥ دقائق)"},
+        {"matches", "مباريات فرقك القادمة"}, {"round", "مباريات جولة الدوري"}, {"verse", "آية أو حديث اليوم"}, {"adhkar", "أذكار وتسبيح (كل ٥ دقائق)"},
         {"none", "لا شيء"},
     };
 
@@ -192,6 +199,7 @@ final class Prefs {
             + "&region=" + regionId(city[0])
             + "&tz=" + Uri.encode(TZ)
             + "&teams=" + join(teamIds(), ",")
+            + "&leagues=" + join(list("leagues"), ",")
             + "&panel=" + panel()
             + "&week=" + ("none".equals(panel()) ? "0" : "1")   // for a page older than #panel
             + "&genres=" + Uri.encode(join(list("genres"), ","))

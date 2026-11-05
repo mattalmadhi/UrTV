@@ -430,6 +430,33 @@ for (const [width, height] of [[1920, 1080], [1280, 720]]) {
   await ctx.close();
 }
 
+// ---- a followed league: its round on the bottom row and on the card, beside the followed teams
+for (const [width, height] of [[1920, 1080], [1280, 720]]) {
+  const { p, ctx, errors } = await open('tv.html', 'teams=136013&panel=adhkar&scenes=calm,faith,info&leagues=4328', { width, height });
+  const ev = `(id, hrs, extra) => Object.assign({ idEvent: id, strHomeTeam: 'Everton', idHomeTeam: '133615', strAwayTeam: 'Crystal Palace', idAwayTeam: '133632',
+    strHomeTeamBadge: 'https://badge.invalid/a.png', strAwayTeamBadge: 'https://badge.invalid/b.png', strTimestamp: new Date(Date.now() + hrs * 36e5).toISOString() }, extra || {})`;
+  await p.evaluate(`{ const ev = ${ev}; LEAGUE_ROUND['4328'] = 10;
+    LEAGUE_EVENTS['4328'] = [ev('a', 30), ev('b', 32), ev('c', 34), ev('d', 36), ev('e', 38), ev('f', 40), ev('g', -30, { intHomeScore: 2, intAwayScore: 1, strStatus: 'FT' }), ev('h', -1, { intHomeScore: 0, intAwayScore: 0, strProgress: '40' }), ev('old', 900)];
+    window.tickScene = () => {}; setScene('info'); renderMatches(); }`);
+  await p.waitForTimeout(1100);
+  const r = await p.evaluate(() => {
+    const card = document.querySelector('.week').getBoundingClientRect(), bar = document.querySelector('.bottom').getBoundingClientRect(), clock = document.querySelector('.clockwrap').getBoundingClientRect();
+    return { hd: document.getElementById('week-hd').textContent, rows: document.querySelectorAll('#week-list li.rnd').length, all: roundRows().length, panel: panelNow(),
+      slots: (() => { const seen = new Set(); return leagueEvents().map(e => finishedRecently(e, Date.now()) ? eventBlock(e, null, Date.now(), seen) : eventBlock(null, e, Date.now(), seen)).filter(Boolean).length; })(),
+      fits: card.bottom <= bar.top - 4 && card.right <= clock.left - 4 && card.height <= .5 * innerHeight, row: document.getElementById('week-list').innerText.slice(0, 40), lookups: 0 };
+  });
+  check(`league at ${width}x${height}: the round on the card, in pages, inside its place`, !errors.length && r.hd === 'الدوري الإنجليزي · الجولة ١٠'
+    && r.panel === 'round' && r.rows === 5 && r.all === 8 && r.fits, JSON.stringify(r) + errors.join('; '));
+  check(`league at ${width}x${height}: the bottom row turns through the games`, r.slots === 7 && !r.row.includes('2'), JSON.stringify(r));
+  await ctx.close();
+}
+{
+  const { p, ctx, errors } = await open('tv.html', 'teams=136013&panel=adhkar&scenes=calm,faith,info');
+  const r = await p.evaluate(() => { window.tickScene = () => {}; setScene('info'); return { panel: panelNow(), events: leagueEvents().length }; });
+  check('no league: the info scene keeps the forecast, nothing else changes', !errors.length && r.panel === 'forecast' && r.events === 0, JSON.stringify(r));
+  await ctx.close();
+}
+
 await browser.close();
 console.log(failed ? `\n${failed} failed` : '\nall page tests passed');
 process.exit(failed ? 1 : 0);

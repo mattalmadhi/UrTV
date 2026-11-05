@@ -46,5 +46,8 @@ async function shot(name, hash, prepare) {
 }
 
 for (const panel of ['shows', 'prayers', 'forecast', 'matches', 'verse', 'adhkar', 'none']) await shot('thumb_panel_' + panel, 'panel=' + panel);
+await shot('thumb_panel_round', 'panel=round&leagues=4328', `LEAGUE_ROUND['4328'] = 10; LEAGUE_EVENTS['4328'] = [30, 32, 34, 36, 38].map((h, i) => ({ idEvent: 'r' + i,
+  strHomeTeam: ['Arsenal', 'Everton', 'Liverpool', 'Chelsea', 'Fulham'][i], strAwayTeam: ['Everton', 'Fulham', 'Brentford', 'Arsenal', 'Liverpool'][i],
+  strTimestamp: new Date(Date.now() + h * 36e5).toISOString() })); renderPanel(false);`);
 for (const scene of ['calm', 'faith', 'info']) await shot('thumb_scene_' + scene, 'panel=adhkar&scenes=' + scene, `tickScene = () => {}; setScene('${scene}');`);
 await browser.close();

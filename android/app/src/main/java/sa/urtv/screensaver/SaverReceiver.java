@@ -18,7 +18,7 @@ import java.util.List;
  *   am broadcast -n sa.urtv.screensaver/.SaverReceiver -a sa.urtv.screensaver.SET
  *       [--es city 'الرس'] [--es lat 25.86 --es lon 43.49] [--es teams '136013:Al-Hilal,150643:Al-Zulfi']
  *       [--es panel prayers] [--es home_panel none] [--es minrating 7] [--es genres Drama,Comedy] [--es langs English]
- *       [--es photos 30] [--es idle 10] [--es scenes calm,faith,info] [--es scene_min 3] [--es moment 1]
+ *       [--es leagues 4328] [--es photos 30] [--es idle 10] [--es scenes calm,faith,info] [--es scene_min 3] [--es moment 1]
  *   am broadcast -n sa.urtv.screensaver/.SaverReceiver -a sa.urtv.screensaver.UPDATE
  *
  * photos = minutes between background photos (Prefs.PHOTO_MINUTES). idle = minutes before the TV starts the
@@ -129,6 +129,8 @@ public class SaverReceiver extends BroadcastReceiver {
         }
         List<String> genres = codes(i.getStringExtra("genres"), Prefs.GENRES);
         List<String> langs = codes(i.getStringExtra("langs"), Prefs.LANGS);
+        List<String> leagues = codes(i.getStringExtra("leagues"), Prefs.FOLLOW_LEAGUES);
+        if (leagues != null && leagues.contains(null)) return "error: leagues are " + names(Prefs.FOLLOW_LEAGUES);
         if (genres != null && genres.contains(null)) return "error: genres are " + names(Prefs.GENRES);
         if (langs != null && langs.contains(null)) return "error: langs are " + names(Prefs.LANGS);
 
@@ -149,6 +151,7 @@ public class SaverReceiver extends BroadcastReceiver {
         if (sceneList != null) p.setScenes(sceneList);
         if (sceneMin != null) p.setSceneMinutes(sceneMin);
         if (moment != null) p.setMoment(moment.equals("1"));
+        if (leagues != null) p.setList("leagues", leagues);
         if (genres != null) p.setList("genres", genres);
         if (langs != null) p.setList("langs", langs);
         return "saved\n" + describe(c, p);
@@ -158,6 +161,7 @@ public class SaverReceiver extends BroadcastReceiver {
         String[] city = p.city();
         return "city: " + city[0] + " (" + city[1] + ", " + city[2] + ")"
             + "\nteams: " + Prefs.join(p.teams(), ", ")
+            + "\nleagues: " + Prefs.join(p.list("leagues"), ",")
             + "\npanel: " + p.panel() + "\nhome_panel: " + p.homePanel()
             + "\nminrating: " + p.minRating()
             + "\nphotos: " + p.photoMinutes()

@@ -158,6 +158,8 @@ public class SettingsActivity extends Activity {
         header("المباريات");
         row("الفرق المتابعة (" + arabicNum(prefs.teams().size()) + "/" + arabicNum(Prefs.MAX_TEAMS) + ")", teamsLabel(),
             R.drawable.ic_trophy, new Runnable() { public void run() { manageTeams(); } });
+        row("الدوريات المتابعة", labels(Prefs.FOLLOW_LEAGUES, prefs.list("leagues"), "لا شيء"),
+            R.drawable.ic_trophy, new Runnable() { public void run() { pickMany("leagues", "الدوريات المتابعة", Prefs.FOLLOW_LEAGUES); } });
 
         header("شاشة التوقف");
         row("المشاهد", sceneLabels(), R.drawable.ic_screensaver, new Runnable() { public void run() { pickScenes(); } });

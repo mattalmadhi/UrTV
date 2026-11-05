@@ -6,6 +6,8 @@
 #   optimize/saver.sh city 'اسم' 25.86 43.49       any place: name, latitude, longitude
 #   optimize/saver.sh find-team الهلال             a club's id (Arabic or English name): id:Name | league
 #   optimize/saver.sh teams 136013:Al-Hilal 150643:Al-Zulfi    followed teams in order (up to 10)
+#   optimize/saver.sh leagues 4328                 followed leagues, beside the teams ("" = none): 4328 English,
+#                                                  4668 Saudi, 4335 Spanish, 4332 Italian, 4331 German, 4334 French, 4337 Dutch
 #   optimize/saver.sh card prayers                 beside the clock: shows prayers forecast matches verse adhkar none
 #   optimize/saver.sh home-card none               on the home screen (launcher): same choices, none = off
 #   optimize/saver.sh genres Drama,Comedy          episodes card: Drama Comedy Action Crime Thriller Mystery
@@ -54,6 +56,7 @@ case "${1:-}" in
   genres)    send SET "--es genres $(quote "${2-}")" ;;
   langs)     send SET "--es langs $(quote "${2-}")" ;;
   minrating) send SET "--es minrating $(quote "${2:?usage: optimize/saver.sh minrating 7}")" ;;
+  leagues)   send SET "--es leagues $(quote "${2-}")" ;;
   scenes)    send SET "--es scenes $(quote "${2:?usage: optimize/saver.sh scenes calm,faith,info}")" ;;
   scene-min) send SET "--es scene_min $(quote "${2:?usage: optimize/saver.sh scene-min 3}")" ;;
   moment)    send SET "--es moment $(quote "${2:?usage: optimize/saver.sh moment 1}")" ;;
