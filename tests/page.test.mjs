@@ -437,7 +437,7 @@ for (const [width, height] of [[1920, 1080], [1280, 720]]) {
     strHomeTeamBadge: 'https://badge.invalid/a.png', strAwayTeamBadge: 'https://badge.invalid/b.png', strTimestamp: new Date(Date.now() + hrs * 36e5).toISOString() }, extra || {})`;
   await p.evaluate(`{ const ev = ${ev}; LEAGUE_ROUND['4328'] = 10;
     LEAGUE_EVENTS['4328'] = [ev('a', 30), ev('b', 32), ev('c', 34), ev('d', 36), ev('e', 38), ev('f', 40), ev('g', -30, { intHomeScore: 2, intAwayScore: 1, strStatus: 'FT' }), ev('h', -1, { intHomeScore: 0, intAwayScore: 0, strProgress: '40' }), ev('old', 900)];
-    window.tickScene = () => {}; setScene('info'); renderMatches(); }`);
+    window.tickScene = () => {}; setScene('info'); renderPanel(false); renderMatches(); }`);
   await p.waitForTimeout(1100);
   const r = await p.evaluate(() => {
     const card = document.querySelector('.week').getBoundingClientRect(), bar = document.querySelector('.bottom').getBoundingClientRect(), clock = document.querySelector('.clockwrap').getBoundingClientRect();
